@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="plugin" version="3.8" group="system" method="upgrade">
+	<name>PLG_REVARS</name>
+	<creationDate>26.11.2019</creationDate>
+	<author>Cymbal</author>
+	<authorEmail>cymbal@delo-design.ru</authorEmail>
+	<authorUrl>https://delo-design.ru</authorUrl>
+	<copyright>Copyright © 2019 Delo Design. All rights reserved.</copyright>
+	<license>GNU General Public License version 2 or later; see LICENSE.txt</license>
+	<version>1.0</version>
+	<description>PLG_REVARS_XML_DESCRIPTION</description>
+
+	<languages folder="language">
+		<language tag="en-GB">en-GB/en-GB.plg_system_revars.ini</language>
+		<language tag="en-GB">en-GB/en-GB.plg_system_revars.sys.ini</language>
+		<language tag="ru-RU">ru-RU/ru-RU.plg_system_revars.ini</language>
+		<language tag="ru-RU">ru-RU/ru-RU.plg_system_revars.sys.ini</language>
+	</languages>
+
+	<files>
+		<filename plugin="revars">revars.php</filename>
+		<filename plugin="revars">helper.php</filename>
+		<folder>language</folder>
+	</files>
+
+	<updateservers>
+		<server type="extension" priority="1" name="revars">https://hika.su/update/free/plg_revars.xml</server>
+	</updateservers>
+
+	<config>
+		<fields name="params">
+			<fieldset name="basic">
+
+				<field
+						name="variables"
+						type="subform"
+						label="PLG_REVARS_CONFIG_VARIABLES"
+						layout="joomla.form.field.subform.repeatable-table"
+						multiple="true">
+					<form>
+						<field
+								name="comment"
+								type="textarea"
+								class="span12"
+								label="PLG_REVARS_CONFIG_VARIABLES_COMMENT"
+						/>
+						<field
+								name="variable"
+								type="text"
+								label="PLG_REVARS_CONFIG_VARIABLES_VARIABLE"
+						/>
+						<field
+								name="value"
+								type="text"
+								filter="raw"
+								label="PLG_REVARS_CONFIG_VARIABLES_VALUE"
+						/>
+					</form>
+				</field>
+
+				<field type="spacer" name="spacer" hr="true"/>
+
+				<field
+						name="replaces"
+						type="subform"
+						label="PLG_REVARS_CONFIG_REPLACES"
+						layout="joomla.form.field.subform.repeatable-table"
+						multiple="true">
+					<form>
+						<field
+								name="search"
+								type="text"
+								filter="raw"
+								label="PLG_REVARS_CONFIG_REPLACES_SEARCH"
+						/>
+						<field
+								name="replace"
+								type="text"
+								filter="raw"
+								label="PLG_REVARS_CONFIG_REPLACES_REPLACE"
+						/>
+					</form>
+				</field>
+
+			</fieldset>
+		</fields>
+	</config>
+
+</extension>
