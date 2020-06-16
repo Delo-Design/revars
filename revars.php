@@ -48,12 +48,18 @@ class plgSystemRevars extends CMSPlugin
 	protected $autoloadLanguage = true;
 
 
+
 	public function onAfterRender()
 	{
+
 		$admin = $this->app->isClient('administrator');
+		$vars=$this->params->get('variables');
+		$reps=$this->params->get('replaces');
 		$customizer = !empty($this->app->input->get('customizer'));
-		$option = $this->app->input->get('com_ajax', '');
-		$p = $this->app->input->get('p', '');
+
+		$r     = $this->app->input;
+		$get   = $r->get->getArray();
+
 
 		if($admin || $customizer)
 		{
@@ -63,7 +69,7 @@ class plgSystemRevars extends CMSPlugin
 		JLoader::register('RevarsHelper', JPATH_SITE . DIRECTORY_SEPARATOR . implode(DIRECTORY_SEPARATOR, ['plugins', 'system', 'revars', 'helper.php']));
 
 		$body = $this->app->getBody();
-		$body = RevarsHelper::replace($body);
+		$body = RevarsHelper::replace($body, $vars, $reps);
 		$this->app->setBody($body);
 	}
 

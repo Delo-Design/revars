@@ -18,58 +18,42 @@ use Joomla\Registry\Registry;
 class RevarsHelper
 {
 
-	public static $params;
-
 	/**
-	 * @param $str
+	 * @param $str - тело сайта
+	 *
+	 * @param $vars - переменные
+	 * @param $reps - замены
+	 *
 	 *
 	 * @return mixed
 	 *
 	 * @since version
 	 */
-	public static function replace($str)
+	public static function replace($str, $vars, $reps)
 	{
 
-		if(empty(self::$params))
-		{
-			//выборка элемента
-			$db = Factory::getDbo();
-			$query = $db->getQuery(true)
-				->select($db->quoteName(['params']))
-				->from('#__extensions')
-				->where( 'element=' . $db->quote('revars'));
-			$extension = $db->setQuery( $query )->loadObject();
-			self::$params = new Registry($extension->params);
-		}
 
-		$allVariables = [];
-		$variables = self::$params->get('variables', []);
-		$replaces = self::$params->get('replaces', []);
-		$systemVariables = [
-			[
+
+		$allVariables = [
+			(object) [
 				'variable' => 'server_name',
 				'value' => $_SERVER['SERVER_NAME'],
 			],
-			[
+			(object) [
 				'variable' => 'http_host',
 				'value' => $_SERVER['HTTP_HOST'],
 			],
-			[
+			(object) [
 				'variable' => 'request_uri',
 				'value' => $_SERVER['REQUEST_URI'],
 			],
-			[
+			(object) [
 				'variable' => 'remote_addr',
 				'value' => $_SERVER['REMOTE_ADDR'],
 			]
 		];
 
-		foreach ($systemVariables as $variable)
-		{
-			$allVariables[] = (object)$variable;
-		}
-
-		foreach ($variables as $variable)
+		foreach ($vars as $variable)
 		{
 			$allVariables[] = (object)$variable;
 		}
@@ -81,7 +65,7 @@ class RevarsHelper
 			$str = str_replace('{VAR_' . strtoupper($variable->variable) . '}', $variable->value, $str);
 		}
 
-		foreach ($replaces as $replace)
+		foreach ($reps as $replace)
 		{
 			$replaceString = $replace->replace;
 
@@ -98,6 +82,4 @@ class RevarsHelper
 
 
 	//todo добавить contentPrepare и в админке выбор где вызвать
-
-
 }

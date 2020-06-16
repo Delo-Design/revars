@@ -48,6 +48,7 @@
 								name="variable"
 								type="text"
 								label="PLG_REVARS_CONFIG_VARIABLES_VARIABLE"
+
 						/>
 						<field
 								name="value"
@@ -78,6 +79,30 @@
 								type="text"
 								filter="raw"
 								label="PLG_REVARS_CONFIG_REPLACES_REPLACE"
+						/>
+					</form>
+				</field>
+
+				<field type="spacer" name="spacer2" hr="true"/>
+
+				<field
+						name="utms"
+						type="subform"
+						label="PLG_REVARS_CONFIG_UTM"
+						layout="joomla.form.field.subform.repeatable-table"
+						multiple="true">
+					<form>
+						<field
+								name="name"
+								type="text"
+								filter="raw"
+								label="PLG_REVARS_CONFIG_UTM_NAME"
+						/>
+						<field
+								name="initial"
+								type="text"
+								filter="raw"
+								label="PLG_REVARS_CONFIG_UTM_INITIAL"
 						/>
 					</form>
 				</field>
