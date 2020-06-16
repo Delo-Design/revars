@@ -55,7 +55,6 @@ class plgSystemRevars extends CMSPlugin
 		$r     = $this->app->input;
 		$get   = $r->get->getArray();
 
-
 		foreach ($get as $name => $item)
 		{
 			foreach ($utms as $variable)
@@ -66,7 +65,6 @@ class plgSystemRevars extends CMSPlugin
 				}
 			}
 		}
-
 
 
 		$body = $this->app->getBody();
