@@ -19,7 +19,6 @@
 
 	<files>
 		<filename plugin="revars">revars.php</filename>
-		<filename plugin="revars">helper.php</filename>
 	</files>
 
 	<updateservers>
