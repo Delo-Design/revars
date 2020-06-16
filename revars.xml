@@ -19,6 +19,7 @@
 
 	<files>
 		<filename plugin="revars">revars.php</filename>
+		<folder>language</folder>
 	</files>
 
 	<updateservers>
