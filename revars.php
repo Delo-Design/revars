@@ -1,25 +1,23 @@
 <?php
 /**
- * @package    revars
+ * @package    Revars
  *
- * @author     Cymbal <cymbal@delo-design.ru>
- * @copyright  Copyright © 2019 Delo Design. All rights reserved.
+ * @author     Cymbal <cymbal@delo-design.ru> and Progreccor
+ * @copyright  Copyright © 2020 Delo Design. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
- * @link       https://delo-design.ru
+ * @link       https://hika.su
  */
 
 use Joomla\CMS\Application\CMSApplication;
-use Joomla\CMS\Factory;
 use Joomla\CMS\Plugin\CMSPlugin;
-use Joomla\Database\DatabaseDriver;
 
 defined('_JEXEC') or die;
 
 /**
  * Revars plugin.
  *
- * @package   uniqmetaid
- * @since     1.0.0
+ * @package   revars
+ * @since     1.1
  */
 class plgSystemRevars extends CMSPlugin
 {
@@ -30,14 +28,6 @@ class plgSystemRevars extends CMSPlugin
 	 * @since  1.0.0
 	 */
 	protected $app;
-
-	/**
-	 * Database object
-	 *
-	 * @var    DatabaseDriver
-	 * @since  1.0.0
-	 */
-	protected $db;
 
 	/**
 	 * Affects constructor behavior. If true, language files will be loaded automatically.
