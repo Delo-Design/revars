@@ -59,6 +59,36 @@
 					</form>
 				</field>
 
+				<field type="spacer" name="spacer2" hr="true"/>
+
+				<field
+						name="utms"
+						type="subform"
+						label="PLG_REVARS_CONFIG_UTM"
+						layout="joomla.form.field.subform.repeatable-table"
+						multiple="true">
+					<form>
+						<field
+								name="comment"
+								type="textarea"
+								class="span12"
+								label="PLG_REVARS_CONFIG_VARIABLES_COMMENT"
+						/>
+						<field
+								name="variable"
+								type="text"
+								filter="raw"
+								label="PLG_REVARS_CONFIG_UTM_NAME"
+						/>
+						<field
+								name="value"
+								type="text"
+								filter="raw"
+								label="PLG_REVARS_CONFIG_UTM_INITIAL"
+						/>
+					</form>
+				</field>
+
 				<field type="spacer" name="spacer" hr="true"/>
 
 				<field
@@ -83,29 +113,7 @@
 					</form>
 				</field>
 
-				<field type="spacer" name="spacer2" hr="true"/>
 
-				<field
-						name="utms"
-						type="subform"
-						label="PLG_REVARS_CONFIG_UTM"
-						layout="joomla.form.field.subform.repeatable-table"
-						multiple="true">
-					<form>
-						<field
-								name="name"
-								type="text"
-								filter="raw"
-								label="PLG_REVARS_CONFIG_UTM_NAME"
-						/>
-						<field
-								name="initial"
-								type="text"
-								filter="raw"
-								label="PLG_REVARS_CONFIG_UTM_INITIAL"
-						/>
-					</form>
-				</field>
 
 			</fieldset>
 		</fields>

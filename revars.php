@@ -16,7 +16,7 @@ use Joomla\Database\DatabaseDriver;
 defined('_JEXEC') or die;
 
 /**
- * Uniqmetaid plugin.
+ * Revars plugin.
  *
  * @package   uniqmetaid
  * @since     1.0.0
@@ -47,29 +47,91 @@ class plgSystemRevars extends CMSPlugin
 	 */
 	protected $autoloadLanguage = true;
 
-
-
 	public function onAfterRender()
 	{
 
 		$admin = $this->app->isClient('administrator');
-		$vars=$this->params->get('variables');
-		$reps=$this->params->get('replaces');
 		$customizer = !empty($this->app->input->get('customizer'));
-
-		$r     = $this->app->input;
-		$get   = $r->get->getArray();
-
 
 		if($admin || $customizer)
 		{
 			return;
 		}
 
-		JLoader::register('RevarsHelper', JPATH_SITE . DIRECTORY_SEPARATOR . implode(DIRECTORY_SEPARATOR, ['plugins', 'system', 'revars', 'helper.php']));
+		$vars=$this->params->get('variables');
+		$reps=$this->params->get('replaces');
+		$utms=$this->params->get('utms');
+
+		$r     = $this->app->input;
+		$get   = $r->get->getArray();
+
+
+		foreach ($get as $name => $item)
+		{
+			foreach ($utms as $variable)
+			{
+				if ($name == $variable->variable)
+				{
+					$variable->value = $item;
+				}
+			}
+		}
+
+
 
 		$body = $this->app->getBody();
-		$body = RevarsHelper::replace($body, $vars, $reps);
+
+		$allVariables = [
+			(object) [
+				'variable' => 'server_name',
+				'value' => $_SERVER['SERVER_NAME'],
+			],
+			(object) [
+				'variable' => 'http_host',
+				'value' => $_SERVER['HTTP_HOST'],
+			],
+			(object) [
+				'variable' => 'request_uri',
+				'value' => $_SERVER['REQUEST_URI'],
+			],
+			(object) [
+				'variable' => 'remote_addr',
+				'value' => $_SERVER['REMOTE_ADDR'],
+			]
+		];
+
+
+
+		foreach ($vars as $variable)
+		{
+			$allVariables[] = (object)$variable;
+		}
+
+		foreach ($utms as $variable)
+		{
+			$allVariables[] = (object)$variable;
+		}
+
+
+		$allVariables = array_reverse($allVariables);
+
+		foreach ($allVariables as $variable)
+		{
+			$body = str_replace('{VAR_' . strtoupper($variable->variable) . '}', $variable->value, $body);
+		}
+
+		foreach ($reps as $replace)
+		{
+			$replaceString = $replace->replace;
+
+			foreach ($allVariables as $variable)
+			{
+				$replaceString = str_replace('{VAR_' . strtoupper($variable->variable) . '}', $variable->value, $replaceString);
+			}
+
+			$body = str_replace($replace->search, $replaceString, $body);
+		}
+
 		$this->app->setBody($body);
 	}
 
