@@ -109,8 +109,7 @@ class plgSystemRevars extends CMSPlugin
 		], $variables);
 
 		PluginHelper::importPlugin('revars');
-		$dispatcher = \JEventDispatcher::getInstance();
-		$results    = $dispatcher->trigger('onRevarsAddVariables');
+		$results = $this->app->triggerEvent('onRevarsAddVariables');
 
 		if (is_array($results))
 		{
