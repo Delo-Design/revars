@@ -89,7 +89,7 @@ class plgSystemRevars extends CMSPlugin
 			- загрузка позиции по названию
 		*/
 
-		$variables = [
+		$variables_server = [
 			(object) [
 				'variable' => 'server_name',
 				'value'    => $_SERVER['SERVER_NAME'],
@@ -107,6 +107,13 @@ class plgSystemRevars extends CMSPlugin
 				'value'    => $_SERVER['REMOTE_ADDR'],
 			]
 		];
+
+		// загоняем переменные от сервера
+		foreach ($variables_server as $variable)
+		{
+			$search[]  = '{VAR_' . strtoupper($variable->variable) . '}';
+			$replace[] = $variable->value;
+		}
 
 		// загоняем переменные от плагина
 		foreach ($variables_params as $variable)
@@ -133,7 +140,11 @@ class plgSystemRevars extends CMSPlugin
 			{
 				if (is_array($result))
 				{
-					$variables = array_merge($result, $variables);
+					foreach ($result as $variable)
+					{
+						$search[]  = '{VAR_' . strtoupper($variable->variable) . '}';
+						$replace[] = $variable->value;
+					}
 				}
 			}
 		}
