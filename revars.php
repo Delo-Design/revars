@@ -1,4 +1,5 @@
-<?php
+<?php defined('_JEXEC') or die;
+
 /**
  * @package    Revars
  *
@@ -10,8 +11,8 @@
 
 use Joomla\CMS\Application\CMSApplication;
 use Joomla\CMS\Plugin\CMSPlugin;
+use Joomla\CMS\Plugin\PluginHelper;
 
-defined('_JEXEC') or die;
 
 /**
  * Revars plugin.
@@ -21,6 +22,7 @@ defined('_JEXEC') or die;
  */
 class plgSystemRevars extends CMSPlugin
 {
+
 	/**
 	 * Application object
 	 *
@@ -28,6 +30,7 @@ class plgSystemRevars extends CMSPlugin
 	 * @since  1.0.0
 	 */
 	protected $app;
+
 
 	/**
 	 * Affects constructor behavior. If true, language files will be loaded automatically.
@@ -37,23 +40,25 @@ class plgSystemRevars extends CMSPlugin
 	 */
 	protected $autoloadLanguage = true;
 
+
 	public function onAfterRender()
 	{
 
-		$admin = $this->app->isClient('administrator');
+		$admin      = $this->app->isClient('administrator');
 		$customizer = !empty($this->app->input->get('customizer'));
 
-		if($admin || $customizer)
+		if ($admin || $customizer)
 		{
 			return;
 		}
 
-		$vars=$this->params->get('variables');
-		$reps=$this->params->get('replaces');
-		$utms=$this->params->get('utms');
-
-		$r     = $this->app->input;
-		$get   = $r->get->getArray();
+		$search    = [];
+		$replace   = [];
+		$variables = $this->params->get('variables');
+		$replaces  = $this->params->get('replaces');
+		$utms      = $this->params->get('utms');
+		$body      = $this->app->getBody();
+		$get       = $this->app->input->get->getArray();
 
 		foreach ($get as $name => $item)
 		{
@@ -66,61 +71,79 @@ class plgSystemRevars extends CMSPlugin
 			}
 		}
 
+		// системные переменные
+		/*  можно дополнить переменные:
+			- какой компонент работает,
+			- какой view,
+			- id активного меню
+			- id активного пункта меню
+			- название сайта из конфигурации,
+			- время сервера,
+			- время джумлы
+			- имя пользователя
+			- email пользователя
+			- id пользователя
+			- доп. поля пользователя
+			- константа языка
+			- загрузка модуля по id
+			- загрузка позиции по названию
+		*/
 
-		$body = $this->app->getBody();
-
-		$allVariables = [
+		$variables = array_merge([
 			(object) [
 				'variable' => 'server_name',
-				'value' => $_SERVER['SERVER_NAME'],
+				'value'    => $_SERVER['SERVER_NAME'],
 			],
 			(object) [
 				'variable' => 'http_host',
-				'value' => $_SERVER['HTTP_HOST'],
+				'value'    => $_SERVER['HTTP_HOST'],
 			],
 			(object) [
 				'variable' => 'request_uri',
-				'value' => $_SERVER['REQUEST_URI'],
+				'value'    => $_SERVER['REQUEST_URI'],
 			],
 			(object) [
 				'variable' => 'remote_addr',
-				'value' => $_SERVER['REMOTE_ADDR'],
+				'value'    => $_SERVER['REMOTE_ADDR'],
 			]
-		];
+		], $variables);
 
+		PluginHelper::importPlugin('revars');
+		$dispatcher = \JEventDispatcher::getInstance();
+		$results    = $dispatcher->trigger('onRevarsAddVariables');
 
-
-		foreach ($vars as $variable)
+		if (is_array($results))
 		{
-			$allVariables[] = (object)$variable;
+			$variables = array_merge($results, $variables);
+		}
+
+		foreach ($variables as $variable)
+		{
+			$search[]  = '{VAR_' . strtoupper($variable->variable) . '}';
+			$replace[] = $variable->value;
 		}
 
 		foreach ($utms as $variable)
 		{
-			$allVariables[] = (object)$variable;
+			$search[]  = '{VAR_' . strtoupper($variable->variable) . '}';
+			$replace[] = $variable->value;
 		}
 
-
-		$allVariables = array_reverse($allVariables);
-
-		foreach ($allVariables as $variable)
+		$count       = 1;
+		$searchCount = count($search);
+		for ($i = 1; $i < $searchCount; $i++)
 		{
-			$body = str_replace('{VAR_' . strtoupper($variable->variable) . '}', $variable->value, $body);
+			$body = str_replace($search, $replace, $body, $count);
 		}
 
-		foreach ($reps as $replace)
+		foreach ($replaces as $replace)
 		{
-			$replaceString = $replace->replace;
-
-			foreach ($allVariables as $variable)
-			{
-				$replaceString = str_replace('{VAR_' . strtoupper($variable->variable) . '}', $variable->value, $replaceString);
-			}
-
-			$body = str_replace($replace->search, $replaceString, $body);
+			$replaceString = str_replace($search, $replace, $replace->replace, $count);
+			$body          = str_replace($replace->search, $replaceString, $body);
 		}
 
 		$this->app->setBody($body);
+
 	}
 
 
