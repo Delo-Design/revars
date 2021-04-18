@@ -52,13 +52,13 @@ class plgSystemRevars extends CMSPlugin
 			return;
 		}
 
-		$search    = [];
-		$replace   = [];
-		$variables = $this->params->get('variables');
-		$replaces  = $this->params->get('replaces');
-		$utms      = $this->params->get('utms');
-		$body      = $this->app->getBody();
-		$get       = $this->app->input->get->getArray();
+		$search           = [];
+		$replace          = [];
+		$variables_params = $this->params->get('variables', []);
+		$replaces         = $this->params->get('replaces', []);
+		$utms             = $this->params->get('utms');
+		$body             = $this->app->getBody();
+		$get              = $this->app->input->get->getArray();
 
 		foreach ($get as $name => $item)
 		{
@@ -89,7 +89,7 @@ class plgSystemRevars extends CMSPlugin
 			- загрузка позиции по названию
 		*/
 
-		$variables = array_merge([
+		$variables = [
 			(object) [
 				'variable' => 'server_name',
 				'value'    => $_SERVER['SERVER_NAME'],
@@ -106,26 +106,36 @@ class plgSystemRevars extends CMSPlugin
 				'variable' => 'remote_addr',
 				'value'    => $_SERVER['REMOTE_ADDR'],
 			]
-		], $variables);
+		];
 
+		// загоняем переменные от плагина
+		foreach ($variables_params as $variable)
+		{
+			$search[]  = '{VAR_' . strtoupper($variable->variable) . '}';
+			$replace[] = $variable->value;
+		}
+
+		// загоняем utm метки
+		foreach ($utms as $variable)
+		{
+			$search[]  = '{VAR_' . strtoupper($variable->variable) . '}';
+			$replace[] = $variable->value;
+		}
+
+
+		// получаем переменные от сторонних плагинов
 		PluginHelper::importPlugin('revars');
 		$results = $this->app->triggerEvent('onRevarsAddVariables');
 
 		if (is_array($results))
 		{
-			$variables = array_merge($results, $variables);
-		}
-
-		foreach ($variables as $variable)
-		{
-			$search[]  = '{VAR_' . strtoupper($variable->variable) . '}';
-			$replace[] = $variable->value;
-		}
-
-		foreach ($utms as $variable)
-		{
-			$search[]  = '{VAR_' . strtoupper($variable->variable) . '}';
-			$replace[] = $variable->value;
+			foreach ($results as $result)
+			{
+				if (is_array($result))
+				{
+					$variables = array_merge($result, $variables);
+				}
+			}
 		}
 
 		$count       = 1;
