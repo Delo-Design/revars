@@ -10,6 +10,7 @@
 
 use Joomla\CMS\Application\CMSApplication;
 use Joomla\CMS\Plugin\CMSPlugin;
+use Joomla\CMS\Plugin\PluginHelper;
 
 defined('_JEXEC') or die;
 
@@ -89,6 +90,21 @@ class plgSystemRevars extends CMSPlugin
 		];
 
 
+		// получаем переменные от сторонних плагинов
+		PluginHelper::importPlugin('revars');
+		$results = $this->app->triggerEvent('onRevarsAddVariables');
+
+		if (is_array($results))
+		{
+			foreach ($results as $result)
+			{
+				if (is_array($result))
+				{
+					$allVariables = array_merge($result, $allVariables);
+				}
+			}
+		}
+
 
 		foreach ($vars as $variable)
 		{
@@ -108,9 +124,19 @@ class plgSystemRevars extends CMSPlugin
 			$body = str_replace('{VAR_' . strtoupper($variable->variable) . '}', $variable->value, $body);
 		}
 
+		foreach ($allVariables as $variable)
+		{
+			$body = str_replace('{VAR_' . strtoupper($variable->variable) . '}', $variable->value, $body);
+		}
+
 		foreach ($reps as $replace)
 		{
 			$replaceString = $replace->replace;
+
+			foreach ($allVariables as $variable)
+			{
+				$replaceString = str_replace('{VAR_' . strtoupper($variable->variable) . '}', $variable->value, $replaceString);
+			}
 
 			foreach ($allVariables as $variable)
 			{
