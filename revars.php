@@ -41,20 +41,20 @@ class plgSystemRevars extends CMSPlugin
 	public function onAfterRender()
 	{
 
-		$admin = $this->app->isClient('administrator');
+		$admin      = $this->app->isClient('administrator');
 		$customizer = !empty($this->app->input->get('customizer'));
 
-		if($admin || $customizer)
+		if ($admin || $customizer)
 		{
 			return;
 		}
 
-		$vars=$this->params->get('variables');
-		$reps=$this->params->get('replaces');
-		$utms=$this->params->get('utms');
+		$vars = $this->params->get('variables');
+		$reps = $this->params->get('replaces');
+		$utms = $this->params->get('utms');
 
-		$r     = $this->app->input;
-		$get   = $r->get->getArray();
+		$r   = $this->app->input;
+		$get = $r->get->getArray();
 
 		foreach ($get as $name => $item)
 		{
@@ -73,19 +73,19 @@ class plgSystemRevars extends CMSPlugin
 		$allVariables = [
 			(object) [
 				'variable' => 'server_name',
-				'value' => $_SERVER['SERVER_NAME'],
+				'value'    => $_SERVER['SERVER_NAME'],
 			],
 			(object) [
 				'variable' => 'http_host',
-				'value' => $_SERVER['HTTP_HOST'],
+				'value'    => $_SERVER['HTTP_HOST'],
 			],
 			(object) [
 				'variable' => 'request_uri',
-				'value' => $_SERVER['REQUEST_URI'],
+				'value'    => $_SERVER['REQUEST_URI'],
 			],
 			(object) [
 				'variable' => 'remote_addr',
-				'value' => $_SERVER['REMOTE_ADDR'],
+				'value'    => $_SERVER['REMOTE_ADDR'],
 			]
 		];
 
@@ -108,12 +108,12 @@ class plgSystemRevars extends CMSPlugin
 
 		foreach ($vars as $variable)
 		{
-			$allVariables[] = (object)$variable;
+			$allVariables[] = (object) $variable;
 		}
 
 		foreach ($utms as $variable)
 		{
-			$allVariables[] = (object)$variable;
+			$allVariables[] = (object) $variable;
 		}
 
 
