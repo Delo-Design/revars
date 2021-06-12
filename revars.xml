@@ -7,7 +7,7 @@
 	<authorUrl>https://delo-design.ru</authorUrl>
 	<copyright>Copyright © 2020 Delo Design. All rights reserved.</copyright>
 	<license>GNU General Public License version 2 or later; see LICENSE.txt</license>
-	<version>1.1</version>
+	<version>1.2</version>
 	<description>PLG_REVARS_XML_DESCRIPTION</description>
 
 	<languages folder="language">
@@ -47,11 +47,10 @@
 								name="variable"
 								type="text"
 								label="PLG_REVARS_CONFIG_VARIABLES_VARIABLE"
-
 						/>
 						<field
 								name="value"
-								type="text"
+								type="textarea"
 								filter="raw"
 								label="PLG_REVARS_CONFIG_VARIABLES_VALUE"
 						/>
@@ -91,28 +90,11 @@
 				<field type="spacer" name="spacer" hr="true"/>
 
 				<field
-						name="replaces"
-						type="subform"
-						label="PLG_REVARS_CONFIG_REPLACES"
-						layout="joomla.form.field.subform.repeatable-table"
-						multiple="true">
-					<form>
-						<field
-								name="search"
-								type="text"
-								filter="raw"
-								label="PLG_REVARS_CONFIG_REPLACES_SEARCH"
-						/>
-						<field
-								name="replace"
-								type="text"
-								filter="raw"
-								label="PLG_REVARS_CONFIG_REPLACES_REPLACE"
-						/>
-					</form>
-				</field>
-
-
+					name="nesting"
+					type="number"
+					label="PLG_REVARS_CONFIG_NESTING"
+					default="1"
+				/>
 
 			</fieldset>
 		</fields>

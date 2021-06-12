@@ -1,4 +1,4 @@
-<?php
+<?php defined('_JEXEC') or die;
 /**
  * @package    Revars
  *
@@ -12,7 +12,6 @@ use Joomla\CMS\Application\CMSApplication;
 use Joomla\CMS\Plugin\CMSPlugin;
 use Joomla\CMS\Plugin\PluginHelper;
 
-defined('_JEXEC') or die;
 
 /**
  * Revars plugin.
@@ -22,6 +21,7 @@ defined('_JEXEC') or die;
  */
 class plgSystemRevars extends CMSPlugin
 {
+
 	/**
 	 * Application object
 	 *
@@ -30,6 +30,7 @@ class plgSystemRevars extends CMSPlugin
 	 */
 	protected $app;
 
+
 	/**
 	 * Affects constructor behavior. If true, language files will be loaded automatically.
 	 *
@@ -37,6 +38,7 @@ class plgSystemRevars extends CMSPlugin
 	 * @since  1.0.0
 	 */
 	protected $autoloadLanguage = true;
+
 
 	public function onAfterRender()
 	{
@@ -50,7 +52,6 @@ class plgSystemRevars extends CMSPlugin
 		}
 
 		$vars = $this->params->get('variables');
-		$reps = $this->params->get('replaces');
 		$utms = $this->params->get('utms');
 
 		$r   = $this->app->input;
@@ -72,19 +73,19 @@ class plgSystemRevars extends CMSPlugin
 
 		$allVariables = [
 			(object) [
-				'variable' => 'server_name',
+				'variable' => '{VAR_SERVER_NAME}',
 				'value'    => $_SERVER['SERVER_NAME'],
 			],
 			(object) [
-				'variable' => 'http_host',
+				'variable' => '{VAR_HTTP_HOST}',
 				'value'    => $_SERVER['HTTP_HOST'],
 			],
 			(object) [
-				'variable' => 'request_uri',
+				'variable' => '{VAR_REQUEST_URI}',
 				'value'    => $_SERVER['REQUEST_URI'],
 			],
 			(object) [
-				'variable' => 'remote_addr',
+				'variable' => '{VAR_REMOTE_ADDR}',
 				'value'    => $_SERVER['REMOTE_ADDR'],
 			]
 		];
@@ -118,32 +119,14 @@ class plgSystemRevars extends CMSPlugin
 
 
 		$allVariables = array_reverse($allVariables);
+		$nesting      = (int) $this->params->get('nesting', 1);
 
-		foreach ($allVariables as $variable)
+		for ($i = 1; $i <= $nesting; $i++)
 		{
-			$body = str_replace('{VAR_' . strtoupper($variable->variable) . '}', $variable->value, $body);
-		}
-
-		foreach ($allVariables as $variable)
-		{
-			$body = str_replace('{VAR_' . strtoupper($variable->variable) . '}', $variable->value, $body);
-		}
-
-		foreach ($reps as $replace)
-		{
-			$replaceString = $replace->replace;
-
 			foreach ($allVariables as $variable)
 			{
-				$replaceString = str_replace('{VAR_' . strtoupper($variable->variable) . '}', $variable->value, $replaceString);
+				$body = str_replace($variable->variable, $variable->value, $body);
 			}
-
-			foreach ($allVariables as $variable)
-			{
-				$replaceString = str_replace('{VAR_' . strtoupper($variable->variable) . '}', $variable->value, $replaceString);
-			}
-
-			$body = str_replace($replace->search, $replaceString, $body);
 		}
 
 		$this->app->setBody($body);
