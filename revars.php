@@ -1,4 +1,5 @@
 <?php defined('_JEXEC') or die;
+
 /**
  * @package    Revars
  *
@@ -9,8 +10,10 @@
  */
 
 use Joomla\CMS\Application\CMSApplication;
+use Joomla\CMS\Factory;
 use Joomla\CMS\Plugin\CMSPlugin;
 use Joomla\CMS\Plugin\PluginHelper;
+use Joomla\Registry\Registry;
 
 
 /**
@@ -38,6 +41,41 @@ class plgSystemRevars extends CMSPlugin
 	 * @since  1.0.0
 	 */
 	protected $autoloadLanguage = true;
+
+
+	public function onExtensionAfterSave($context, $table, $isNew)
+	{
+		if ($table->element === 'revars')
+		{
+			$db    = Factory::getDbo();
+			$query = $db->getQuery(true);
+			$query->select($db->quoteName('params'));
+			$query->from($db->quoteName('#__extensions'));
+			$query->where($db->quoteName('element') . ' = ' . $db->quote('revars'));
+			$db->setQuery($query);
+			$object = $db->loadObject();
+			$params = new Registry($object->params);
+			$utms   = $params->get('utms');
+
+			foreach ($utms as &$utm)
+			{
+				$utm->variableforcopy = '{VAR_' . strtoupper($utm->variable) . '}';
+			}
+
+			$params->set('utms', $utms);
+
+			$query      = $db->getQuery(true);
+			$fields     = [
+				$db->quoteName('params') . ' = ' . $db->quote($params->toString()),
+			];
+			$conditions = [
+				$db->quoteName('element') . ' = ' . $db->quote('revars'),
+			];
+			$query->update($db->quoteName('#__extensions'))->set($fields)->where($conditions);
+			$db->setQuery($query);
+			$db->execute();
+		}
+	}
 
 
 	public function onAfterRender()
@@ -112,14 +150,11 @@ class plgSystemRevars extends CMSPlugin
 			$allVariables[] = (object) $variable;
 		}
 
-		foreach ($utms as $variable)
-		{
-			$allVariables[] = (object) $variable;
-		}
-
-
 		$allVariables = array_reverse($allVariables);
 		$nesting      = (int) $this->params->get('nesting', 1);
+
+		// запускам в цикле, потому что мы можем построим переменные вида {VAR_{VAR_SUBDOMAIN}_PHONE_FULL},
+		// то есть переменные вложенные друг в друга
 
 		for ($i = 1; $i <= $nesting; $i++)
 		{
@@ -127,6 +162,14 @@ class plgSystemRevars extends CMSPlugin
 			{
 				$body = str_replace($variable->variable, $variable->value, $body);
 			}
+		}
+
+		// обрабатываем метки utm
+		foreach ($utms as $variable)
+		{
+			// добавляем им префикс VAR, оборачиваем в скобки и приводим к верхнему регистру
+			$variable->variable = '{VAR_' . strtoupper($variable->variable) . '}';
+			$body               = str_replace($variable->variable, $variable->value, $body);
 		}
 
 		$this->app->setBody($body);

@@ -79,6 +79,12 @@
 								label="PLG_REVARS_CONFIG_UTM_NAME"
 						/>
 						<field
+								name="variableforcopy"
+								type="text"
+								label="PLG_REVARS_CONFIG_UTM_NAMEFORCOPY"
+								disabled="disabled"
+						/>
+						<field
 								name="value"
 								type="text"
 								filter="raw"
