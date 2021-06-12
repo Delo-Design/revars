@@ -86,7 +86,7 @@
 						/>
 						<field
 								name="value"
-								type="text"
+								type="textarea"
 								filter="raw"
 								label="PLG_REVARS_CONFIG_UTM_INITIAL"
 						/>
