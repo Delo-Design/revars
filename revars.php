@@ -4,7 +4,7 @@
  * @package    Revars
  *
  * @author     Cymbal <cymbal@delo-design.ru> and Progreccor
- * @copyright  Copyright © 2020 Delo Design. All rights reserved.
+ * @copyright  Copyright © 2022 Delo Design. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://hika.su
  */
@@ -153,7 +153,7 @@ class plgSystemRevars extends CMSPlugin
 		$allVariables = array_reverse($allVariables);
 		$nesting      = (int) $this->params->get('nesting', 1);
 
-		// запускам в цикле, потому что мы можем построим переменные вида {VAR_{VAR_SUBDOMAIN}_PHONE_FULL},
+		// запускам в цикле, потому что мы можем построить переменные вида {VAR_{VAR_SUBDOMAIN}_PHONE_FULL},
 		// то есть переменные вложенные друг в друга
 
 		for ($i = 1; $i <= $nesting; $i++)

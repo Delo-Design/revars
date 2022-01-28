@@ -104,6 +104,38 @@
 				/>
 
 			</fieldset>
+			<fieldset name="forconstants" label="PLG_REVARS_CONSTANTS_TAB">
+				<field
+						name="constants"
+						type="subform"
+						label="PLG_REVARS_CONFIG_CONSTANTS"
+						layout="joomla.form.field.subform.repeatable-table"
+						multiple="true">
+					<form>
+						<field
+								name="comment"
+								type="textarea"
+
+								label="PLG_REVARS_CONFIG_VARIABLES_COMMENT"
+						/>
+						<field
+								name="variable"
+								type="text"
+
+								label="PLG_REVARS_CONFIG_VARIABLES_VARIABLE"
+						/>
+						<field
+								name="value"
+								type="textarea"
+								filter="raw"
+								label="PLG_REVARS_CONFIG_VARIABLES_VALUE"
+
+						/>
+					</form>
+				</field>
+
+
+			</fieldset>
 		</fields>
 	</config>
 
