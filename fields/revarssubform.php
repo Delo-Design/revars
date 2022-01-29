@@ -3,7 +3,6 @@
 defined('_JEXEC') or die;
 
 JFormHelper::loadFieldClass('subform');
-JFormHelper::loadFieldClass('folderlist');
 
 /**
  * Class JFormFieldRevarssubform
