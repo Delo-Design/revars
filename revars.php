@@ -14,6 +14,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Plugin\CMSPlugin;
 use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\Registry\Registry;
+use Joomla\CMS\Language\Text;
 
 
 /**
@@ -91,6 +92,7 @@ class plgSystemRevars extends CMSPlugin
 
 		$vars = $this->params->get('variables');
 		$utms = $this->params->get('utms');
+		$languageConstants = $this->params->get('constants');
 
 		$r   = $this->app->input;
 		$get = $r->get->getArray();
@@ -170,6 +172,11 @@ class plgSystemRevars extends CMSPlugin
 			// добавляем им префикс VAR, оборачиваем в скобки и приводим к верхнему регистру
 			$variable->variable = '{VAR_' . strtoupper($variable->variable) . '}';
 			$body               = str_replace($variable->variable, $variable->value, $body);
+		}
+		// обрабатываем языковые константы
+		foreach ($languageConstants as $variable)
+		{
+			$body  = str_replace($variable->variable, Text::_(strtoupper(trim($variable->value))), $body);
 		}
 
 		$this->app->setBody($body);

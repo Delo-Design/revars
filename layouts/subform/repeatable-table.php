@@ -38,6 +38,7 @@ $table_head = '';
 
 if (!empty($groupByFieldset))
 {
+
 	foreach ($tmpl->getFieldsets() as $fieldset) {
 		$table_head .= '<th>' . JText::_($fieldset->label);
 
@@ -53,8 +54,9 @@ if (!empty($groupByFieldset))
 }
 else
 {
+   $countHead=intval(92/count($tmpl->getGroup('')));
 	foreach ($tmpl->getGroup('') as $field) {
-		$table_head .= '<th>' . strip_tags($field->label);
+		$table_head .= '<th style="width: '.$countHead.'%">' . strip_tags($field->label);
 
 		if ($field->description)
 		{
@@ -68,7 +70,10 @@ else
 
 	// Label will not be shown for sections layout, so reset the margin left
 	JFactory::getDocument()->addStyleDeclaration(
-		'.subform-table-sublayout-section .controls { margin-left: 0px }'
+		'.subform-table-sublayout-section .controls { margin-left: 0px; padding-right: 0; }'
+	);
+	JFactory::getDocument()->addStyleDeclaration(
+		'.subform-table-sublayout-section .controls input { box-sizing: border-box; padding: 12px; }'
 	);
 }
 ?>
@@ -83,7 +88,7 @@ else
 			data-rows-container="tbody.rows-container-<?php echo $unique_subform_id; ?>"
 			data-minimum="<?php echo $min; ?>" data-maximum="<?php echo $max; ?>"
 		>
-			<table class="adminlist table table-striped table-bordered">
+			<table class="adminlist table table-striped table-bordered" style="max-width: 1400px;">
 				<thead>
 					<tr>
 						<?php echo $table_head; ?>
