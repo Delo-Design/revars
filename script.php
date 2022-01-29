@@ -11,7 +11,7 @@
 // No direct access
 defined('_JEXEC') or die;
 
-class plgSystemRadicalformInstallerScript
+class plgSystemRevarsInstallerScript
 {
 	function preflight($type, $parent)
 	{
