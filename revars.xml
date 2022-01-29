@@ -27,14 +27,14 @@
 	</updateservers>
 
 	<config>
-		<fields name="params">
+		<fields name="params" addfieldpath="/plugins/system/revars/fields">
 			<fieldset name="basic">
 
 				<field
 						name="variables"
-						type="subform"
+						type="revarssubform"
 						label="PLG_REVARS_CONFIG_VARIABLES"
-						layout="joomla.form.field.subform.repeatable-table"
+						layout="subform.repeatable-table"
 						multiple="true">
 					<form>
 						<field
@@ -62,7 +62,7 @@
 
 				<field
 						name="utms"
-						type="subform"
+						type="revarssubform"
 						label="PLG_REVARS_CONFIG_UTM"
 						layout="joomla.form.field.subform.repeatable-table"
 						multiple="true">
@@ -107,7 +107,7 @@
 			<fieldset name="forconstants" label="PLG_REVARS_CONSTANTS_TAB">
 				<field
 						name="constants"
-						type="subform"
+						type="revarssubform"
 						label="PLG_REVARS_CONFIG_CONSTANTS"
 						layout="joomla.form.field.subform.repeatable-table"
 						multiple="true">
@@ -133,8 +133,6 @@
 						/>
 					</form>
 				</field>
-
-
 			</fieldset>
 		</fields>
 	</config>
