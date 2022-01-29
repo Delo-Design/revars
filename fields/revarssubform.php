@@ -6,7 +6,7 @@ JFormHelper::loadFieldClass('subform');
 JFormHelper::loadFieldClass('folderlist');
 
 /**
- * Class JFormFieldRadicalsubform
+ * Class JFormFieldRevarssubform
  */
 class JFormFieldRevarssubform extends JFormFieldSubform
 {
@@ -28,7 +28,7 @@ class JFormFieldRevarssubform extends JFormFieldSubform
 	protected function getLayoutPaths()
 	{
 		return [
-			JPATH_ROOT . '/plugins/fields/revars/layouts',
+			JPATH_ROOT . '/plugins/system/revars/layouts',
 			JPATH_ROOT . '/layouts'
 		];
 	}
