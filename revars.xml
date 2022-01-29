@@ -20,6 +20,7 @@
 	<files>
 		<filename plugin="revars">revars.php</filename>
 		<folder>fields</folder>
+		<folder>layouts</folder>
 		<folder>language</folder>
 	</files>
 
