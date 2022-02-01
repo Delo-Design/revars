@@ -103,7 +103,7 @@ class plgSystemRevars extends CMSPlugin
 			{
 				if ($name == $variable->variable)
 				{
-					$variable->value = $item;
+					$variable->value = strip_tags($item);
 				}
 			}
 		}
