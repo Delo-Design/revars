@@ -1,5 +1,5 @@
 # Revars
-Шорт-коды для Joomla!
+Шорт-коды, utm-метки и исполняемый код в материалах для Joomla!
 
 Официальный сайт проекта https://hika.su/rasshireniya/revars 
 
