@@ -97,17 +97,6 @@ class plgSystemRevars extends CMSPlugin
 		$r   = $this->app->input;
 		$get = $r->get->getArray();
 
-		foreach ($get as $name => $item)
-		{
-			foreach ($utms as $variable)
-			{
-				if ($name == $variable->variable)
-				{
-					$variable->value = strip_tags($item);
-				}
-			}
-		}
-
 
 		$body = $this->app->getBody();
 
@@ -147,15 +136,18 @@ class plgSystemRevars extends CMSPlugin
 		}
 
 
-		foreach ($vars as $variable)
+		if(!empty($vars))
 		{
-			$allVariables[] = (object) $variable;
+			foreach ($vars as $variable)
+			{
+				$allVariables[] = (object) $variable;
+			}
 		}
 
 		$allVariables = array_reverse($allVariables);
 		$nesting      = (int) $this->params->get('nesting', 1);
 
-		// запускам в цикле, потому что мы можем построить переменные вида {VAR_{VAR_SUBDOMAIN}_PHONE_FULL},
+		// запускаем в цикле, потому что мы можем построить переменные вида {VAR_{VAR_SUBDOMAIN}_PHONE_FULL},
 		// то есть переменные вложенные друг в друга
 
 		for ($i = 1; $i <= $nesting; $i++)
@@ -167,16 +159,33 @@ class plgSystemRevars extends CMSPlugin
 		}
 
 		// обрабатываем метки utm
-		foreach ($utms as $variable)
+		if(!empty($utms))
 		{
-			// добавляем им префикс VAR, оборачиваем в скобки и приводим к верхнему регистру
-			$variable->variable = '{VAR_' . strtoupper($variable->variable) . '}';
-			$body               = str_replace($variable->variable, $variable->value, $body);
+			foreach ($get as $name => $item)
+			{
+				foreach ($utms as $variable)
+				{
+					if ($name == $variable->variable)
+					{
+						$variable->value = strip_tags($item);
+					}
+				}
+			}
+
+			foreach ($utms as $variable)
+			{
+				// добавляем им префикс VAR, оборачиваем в скобки и приводим к верхнему регистру
+				$variable->variable = '{VAR_' . strtoupper($variable->variable) . '}';
+				$body               = str_replace($variable->variable, $variable->value, $body);
+			}
 		}
 		// обрабатываем языковые константы
-		foreach ($languageConstants as $variable)
+		if(!empty($languageConstants))
 		{
-			$body  = str_replace($variable->variable, Text::_(strtoupper(trim($variable->value))), $body);
+			foreach ($languageConstants as $variable)
+			{
+				$body  = str_replace($variable->variable, Text::_(strtoupper(trim($variable->value))), $body);
+			}
 		}
 
 		$this->app->setBody($body);
