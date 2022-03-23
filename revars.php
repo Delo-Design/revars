@@ -99,11 +99,13 @@ class plgSystemRevars extends CMSPlugin
 
 		foreach ($get as $name => $item)
 		{
+			if(isset($utms)){
 			foreach ($utms as $variable)
-			{
-				if ($name == $variable->variable)
 				{
-					$variable->value = strip_tags($item);
+					if ($name == $variable->variable)
+					{
+						$variable->value = strip_tags($item);
+					}
 				}
 			}
 		}
