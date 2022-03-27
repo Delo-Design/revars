@@ -11,10 +11,10 @@
 
 use Joomla\CMS\Application\CMSApplication;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\Plugin\CMSPlugin;
 use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\Registry\Registry;
-use Joomla\CMS\Language\Text;
 
 
 /**
@@ -90,20 +90,23 @@ class plgSystemRevars extends CMSPlugin
 			return;
 		}
 
-		$vars = $this->params->get('variables');
-		$utms = $this->params->get('utms');
-		$languageConstants = $this->params->get('constants');
+		$vars              = $this->params->get('variables', []);
+		$utms              = $this->params->get('utms', []);
+		$languageConstants = $this->params->get('constants', []);
 
 		$r   = $this->app->input;
 		$get = $r->get->getArray();
 
-		foreach ($get as $name => $item)
+		if (!empty($utms))
 		{
-			foreach ($utms as $variable)
+			foreach ($get as $name => $item)
 			{
-				if ($name == $variable->variable)
+				foreach ($utms as $variable)
 				{
-					$variable->value = strip_tags($item);
+					if ($name == $variable->variable)
+					{
+						$variable->value = strip_tags($item);
+					}
 				}
 			}
 		}
@@ -147,13 +150,13 @@ class plgSystemRevars extends CMSPlugin
 		}
 
 
-                if(isset($vars))
-                {
-                   foreach ($vars as $variable)
-                   {
-                      $allVariables[] = (object) $variable;
-                   }
-                }
+		if (!empty($vars))
+		{
+			foreach ($vars as $variable)
+			{
+				$allVariables[] = (object) $variable;
+			}
+		}
 
 		$allVariables = array_reverse($allVariables);
 		$nesting      = (int) $this->params->get('nesting', 1);
@@ -170,23 +173,23 @@ class plgSystemRevars extends CMSPlugin
 		}
 
 		// обрабатываем метки utm
-                if(isset($utms))
-                {
-		  foreach ($utms as $variable)
-		  {
-			// добавляем им префикс VAR, оборачиваем в скобки и приводим к верхнему регистру
-			$variable->variable = '{VAR_' . strtoupper($variable->variable) . '}';
-			$body               = str_replace($variable->variable, $variable->value, $body);
-		  }
+		if (!empty($utms))
+		{
+			foreach ($utms as $variable)
+			{
+				// добавляем им префикс VAR, оборачиваем в скобки и приводим к верхнему регистру
+				$variable->variable = '{VAR_' . strtoupper($variable->variable) . '}';
+				$body               = str_replace($variable->variable, $variable->value, $body);
+			}
 		}
 		// обрабатываем языковые константы
-		if(isset($languageConstants))
-                {
-		  foreach ($languageConstants as $variable)
-		  {
-			$body  = str_replace($variable->variable, Text::_(strtoupper(trim($variable->value))), $body);
-		  }
-		}	
+		if (!empty($languageConstants))
+		{
+			foreach ($languageConstants as $variable)
+			{
+				$body = str_replace($variable->variable, Text::_(strtoupper(trim($variable->value))), $body);
+			}
+		}
 
 		$this->app->setBody($body);
 	}
