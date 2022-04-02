@@ -37,15 +37,20 @@
 					type="number"
 					label="PLG_REVARS_CONFIG_NESTING"
 					default="1"
+					class="input-small"
 				/>
-
+				<field
+						name="nesting2"
+						type="extra"
+						label=""
+				/>
 			</fieldset>
 			<fieldset name="forvariables" label="PLG_REVARS_VARIABLES_TAB">
 				<field
 						name="variables"
-						type="revarssubform"
+						type="subform"
 						label="PLG_REVARS_CONFIG_VARIABLES"
-						layout="subform.repeatable-table"
+						layout="joomla.form.field.subform.repeatable-table"
 						multiple="true">
 					<form>
 						<field
@@ -58,6 +63,7 @@
 						<field
 								name="variable"
 								type="text"
+								class="span12"
 								label="PLG_REVARS_CONFIG_VARIABLES_VARIABLE"
 								description="PLG_REVARS_CONFIG_VARIABLES_DESCRIPTION"
 						/>
@@ -73,50 +79,68 @@
 				</field>
 			</fieldset>
 
-			<fieldset name="forutms" label="PLG_REVARS_UTMS_TAB">
+			<fieldset name="forutmtags" label="PLG_REVARS_UTMS_TAB">
 				<field
-						name="utms"
-						type="revarssubform"
+						name="utmtags"
+						type="subform"
 						label="PLG_REVARS_CONFIG_UTM"
-						layout="subform.repeatable-table"
+						layout="joomla.form.field.subform.repeatable-table"
 						multiple="true">
 					<form>
+
 						<field
-								name="comment"
-								type="textarea"
+								name="opentag"
+								type="text"
 								class="span12"
-								label="PLG_REVARS_CONFIG_VARIABLES_COMMENT"
+								filter="raw"
+								label="PLG_REVARS_OPENTAG"
+								description="PLG_REVARS_OPENTAG_DESC"
+						/>
+						<field
+								name="opentag2"
+								type="text"
+								class="span12"
+								filter="raw"
+								label="PLG_REVARS_OPENTAG2"
+								description="PLG_REVARS_CLOSETAG2_DESC"
+
 						/>
 						<field
 								name="variable"
 								type="text"
 								class="span12"
-								filter="raw"
-								label="PLG_REVARS_CONFIG_UTM_NAME"
+								label="PLG_REVARS_UTMTAG"
+								description="PLG_REVARS_UTMTAG_DESC"
 						/>
 						<field
-								name="variableforcopy"
+								name="closetag2"
 								type="text"
 								class="span12"
-								label="PLG_REVARS_CONFIG_UTM_NAMEFORCOPY"
-								disabled="disabled"
+								filter="raw"
+								label="PLG_REVARS_OPENTAG2"
+								description="PLG_REVARS_CLOSETAG2_DESC"
 						/>
 						<field
-								name="value"
-								type="textarea"
+								name="closetag"
+								type="text"
 								filter="raw"
 								class="span12"
-								label="PLG_REVARS_CONFIG_UTM_INITIAL"
+								label="PLG_REVARS_CLOSETAG"
+								description="PLG_REVARS_OPENTAG_DESC"
 						/>
 					</form>
 				</field>
+				<field name="note22" type="note" class=" input-xxlarge" close="true"
+					   label="PLG_REVARS_OPENTAG2_NOTE"
+					   description="PLG_REVARS_OPENTAG2_NOTE_DESCR"
+				/>
 			</fieldset>
 			<fieldset name="forconstants" label="PLG_REVARS_CONSTANTS_TAB">
 				<field
 						name="constants"
-						type="revarssubform"
+						type="subform"
 						label="PLG_REVARS_CONFIG_CONSTANTS"
-						layout="subform.repeatable-table"
+						layout="joomla.form.field.subform.repeatable-table"
 						multiple="true">
 					<form>
 						<field
@@ -124,12 +148,14 @@
 								type="textarea"
 								class="span12"
 								label="PLG_REVARS_CONFIG_VARIABLES_COMMENT"
+								description="PLG_REVARS_CONFIG_VARIABLES_COMMENT_DESCRIPTION"
 						/>
 						<field
 								name="variable"
 								type="text"
 								class="span12"
-								label="PLG_REVARS_CONFIG_VARIABLES_VARIABLE"
+								label="PLG_REVARS_CONFIG_CONSTANT_ON_SITE"
+								description="PLG_REVARS_CONFIG_CONSTANT_ON_SITE_DESC"
 						/>
 						<field
 								name="value"
@@ -137,10 +163,11 @@
 								filter="raw"
 								label="PLG_REVARS_CONFIG_CONSTANT_VALUE"
 								class="span12"
-
+								description="PLG_REVARS_CONFIG_CONSTANT_VALUE_DESC"
 						/>
 					</form>
 				</field>
+
 			</fieldset>
 		</fields>
 	</config>

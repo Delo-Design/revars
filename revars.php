@@ -92,22 +92,26 @@ class plgSystemRevars extends CMSPlugin
 
 		$vars = $this->params->get('variables');
 		$utms = $this->params->get('utms');
+		$utmtags = $this->params->get('utmtags');
 		$languageConstants = $this->params->get('constants');
 
 		$r   = $this->app->input;
 		$get = $r->get->getArray();
-
-		foreach ($get as $name => $item)
+		$weHaveUTMS = false;
+		if(!empty($utmtags))
 		{
-			foreach ($utms as $variable)
+			foreach ($get as $name => $item)
 			{
-				if ($name == $variable->variable)
+				foreach ($utmtags as $variable)
 				{
-					$variable->value = strip_tags($item);
+					if ($name == $variable->variable)
+					{
+						$variable->value = strip_tags($item);
+						$weHaveUTMS = true;
+					}
 				}
 			}
 		}
-
 
 		$body = $this->app->getBody();
 
@@ -147,13 +151,13 @@ class plgSystemRevars extends CMSPlugin
 		}
 
 
-                if(isset($vars))
-                {
-                   foreach ($vars as $variable)
-                   {
-                      $allVariables[] = (object) $variable;
-                   }
-                }
+        if(!empty($vars))
+        {
+           foreach ($vars as $variable)
+           {
+              $allVariables[] = (object) $variable;
+           }
+        }
 
 		$allVariables = array_reverse($allVariables);
 		$nesting      = (int) $this->params->get('nesting', 1);
@@ -170,18 +174,27 @@ class plgSystemRevars extends CMSPlugin
 		}
 
 		// обрабатываем метки utm
-                if(isset($utms))
-                {
-		  foreach ($utms as $variable)
+        if($weHaveUTMS)
+        {
+		  foreach ($utmtags as $variable)
 		  {
 			// добавляем им префикс VAR, оборачиваем в скобки и приводим к верхнему регистру
-			$variable->variable = '{VAR_' . strtoupper($variable->variable) . '}';
-			$body               = str_replace($variable->variable, $variable->value, $body);
+			$splitedBody=explode($variable->opentag,$body,2);
+            // если тег нашли - будем менять
+            if(count($splitedBody)>1)
+            {
+                $latestChunk=explode($variable->closetag,$body,2);
+                // проверяем есть ли оконечный тег
+                if(count($latestChunk)>1)
+                {
+                    $body=$splitedBody[0].$variable->opentag.$variable->opentag2.$variable->value.$variable->closetag2.$variable->closetag.$latestChunk[1];
+                }
+            }
 		  }
 		}
 		// обрабатываем языковые константы
-		if(isset($languageConstants))
-                {
+		if(!empty($languageConstants))
+        {
 		  foreach ($languageConstants as $variable)
 		  {
 			$body  = str_replace($variable->variable, Text::_(strtoupper(trim($variable->value))), $body);
@@ -190,6 +203,4 @@ class plgSystemRevars extends CMSPlugin
 
 		$this->app->setBody($body);
 	}
-
-
 }
