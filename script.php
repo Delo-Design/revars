@@ -40,7 +40,7 @@ class plgSystemRevarsInstallerScript
 
 		$db    = JFactory::getDbo();
 		$query = $db->getQuery(true);
-		$query->update('#__extensions')->set('enabled=1')->where('type=' . $db->q('plugin'))->where('element=' . $db->q('revars'));
+		$query->update('#__extensions')->set('enabled=1')->set('ordering=1000')->where('type=' . $db->q('plugin'))->where('element=' . $db->q('revars'));
 		$db->setQuery($query)->execute();
 
 		JFactory::getApplication()->enqueueMessage(JText::_('PLG_REVARS_WELCOME_MESSAGE'), 'notice');
