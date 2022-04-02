@@ -11,10 +11,10 @@
 
 use Joomla\CMS\Application\CMSApplication;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Language\Text;
 use Joomla\CMS\Plugin\CMSPlugin;
 use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\Registry\Registry;
+use Joomla\CMS\Language\Text;
 
 
 /**
@@ -44,41 +44,6 @@ class plgSystemRevars extends CMSPlugin
 	protected $autoloadLanguage = true;
 
 
-	public function onExtensionAfterSave($context, $table, $isNew)
-	{
-		if ($table->element === 'revars')
-		{
-			$db    = Factory::getDbo();
-			$query = $db->getQuery(true);
-			$query->select($db->quoteName('params'));
-			$query->from($db->quoteName('#__extensions'));
-			$query->where($db->quoteName('element') . ' = ' . $db->quote('revars'));
-			$db->setQuery($query);
-			$object = $db->loadObject();
-			$params = new Registry($object->params);
-			$utms   = $params->get('utms');
-
-			foreach ($utms as &$utm)
-			{
-				$utm->variableforcopy = '{VAR_' . strtoupper($utm->variable) . '}';
-			}
-
-			$params->set('utms', $utms);
-
-			$query      = $db->getQuery(true);
-			$fields     = [
-				$db->quoteName('params') . ' = ' . $db->quote($params->toString()),
-			];
-			$conditions = [
-				$db->quoteName('element') . ' = ' . $db->quote('revars'),
-			];
-			$query->update($db->quoteName('#__extensions'))->set($fields)->where($conditions);
-			$db->setQuery($query);
-			$db->execute();
-		}
-	}
-
-
 	public function onAfterRender()
 	{
 
@@ -91,7 +56,6 @@ class plgSystemRevars extends CMSPlugin
 		}
 
 		$vars = $this->params->get('variables');
-		$utms = $this->params->get('utms');
 		$utmtags = $this->params->get('utmtags');
 		$languageConstants = $this->params->get('constants');
 
