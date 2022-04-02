@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension type="plugin" version="3.8" group="system" method="upgrade">
 	<name>PLG_REVARS</name>
-	<creationDate>08.02.2022</creationDate>
+	<creationDate>02.04.2022</creationDate>
 	<author>Cymbal and Progreccor</author>
 	<authorEmail>cymbal@delo-design.ru</authorEmail>
 	<authorUrl>https://delo-design.ru</authorUrl>
@@ -36,7 +36,7 @@
 					type="number"
 					label="PLG_REVARS_CONFIG_NESTING"
 					default="1"
-					class="input-small"
+					class="input-small w-25"
 				/>
 				<field
 						name="nesting2"
@@ -55,14 +55,14 @@
 						<field
 								name="comment"
 								type="textarea"
-								class="span12"
+								class="span12 w-100"
 								label="PLG_REVARS_CONFIG_VARIABLES_COMMENT"
 								description="PLG_REVARS_CONFIG_VARIABLES_COMMENT_DESCRIPTION"
 						/>
 						<field
 								name="variable"
 								type="text"
-								class="span12"
+								class="span12 w-100"
 								label="PLG_REVARS_CONFIG_VARIABLES_VARIABLE"
 								description="PLG_REVARS_CONFIG_VARIABLES_DESCRIPTION"
 						/>
@@ -71,7 +71,7 @@
 								type="textarea"
 								filter="raw"
 								label="PLG_REVARS_CONFIG_VARIABLES_VALUE"
-								class="span12"
+								class="span12 w-100"
 								description="PLG_REVARS_CONFIG_VARIABLES_VALUE_DESCRIPTION"
 						/>
 					</form>
@@ -90,7 +90,7 @@
 						<field
 								name="opentag"
 								type="text"
-								class="span12"
+								class="span12 w-100"
 								filter="raw"
 								label="PLG_REVARS_OPENTAG"
 								description="PLG_REVARS_OPENTAG_DESC"
@@ -98,7 +98,7 @@
 						<field
 								name="opentag2"
 								type="text"
-								class="span12"
+								class="span12 w-100"
 								filter="raw"
 								label="PLG_REVARS_OPENTAG2"
 								description="PLG_REVARS_CLOSETAG2_DESC"
@@ -107,14 +107,14 @@
 						<field
 								name="variable"
 								type="text"
-								class="span12"
+								class="span12 w-100"
 								label="PLG_REVARS_UTMTAG"
 								description="PLG_REVARS_UTMTAG_DESC"
 						/>
 						<field
 								name="closetag2"
 								type="text"
-								class="span12"
+								class="span12 w-100"
 								filter="raw"
 								label="PLG_REVARS_OPENTAG2"
 								description="PLG_REVARS_CLOSETAG2_DESC"
@@ -123,7 +123,7 @@
 								name="closetag"
 								type="text"
 								filter="raw"
-								class="span12"
+								class="span12 w-100"
 								label="PLG_REVARS_CLOSETAG"
 								description="PLG_REVARS_OPENTAG_DESC"
 						/>
@@ -145,14 +145,14 @@
 						<field
 								name="comment"
 								type="textarea"
-								class="span12"
+								class="span12 w-100"
 								label="PLG_REVARS_CONFIG_VARIABLES_COMMENT"
 								description="PLG_REVARS_CONFIG_VARIABLES_COMMENT_DESCRIPTION"
 						/>
 						<field
 								name="variable"
 								type="text"
-								class="span12"
+								class="span12 w-100"
 								label="PLG_REVARS_CONFIG_CONSTANT_ON_SITE"
 								description="PLG_REVARS_CONFIG_CONSTANT_ON_SITE_DESC"
 						/>
@@ -161,7 +161,7 @@
 								type="text"
 								filter="raw"
 								label="PLG_REVARS_CONFIG_CONSTANT_VALUE"
-								class="span12"
+								class="span12 w-100"
 								description="PLG_REVARS_CONFIG_CONSTANT_VALUE_DESC"
 						/>
 					</form>

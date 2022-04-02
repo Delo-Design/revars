@@ -18,7 +18,7 @@ class JFormFieldExtra extends JFormField {
 			'.subform-table-sublayout-section .controls input { box-sizing: border-box;  }'
 		);
 		JFactory::getDocument()->addStyleDeclaration(
-			'.subform-table-sublayout-section table th { width: 30%; } .subform-table-sublayout-section { max-width: 1400px;} #attrib-forutmtags .subform-table-sublayout-section table th { width: 18%; }'
+			'.subform-table-sublayout-section table th { width: 30% !important;  } .subform-table-sublayout-section { max-width: 1440px;} #attrib-forutmtags .subform-table-sublayout-section table th { width: 18% important; }'
 		);
 
 		return ;
