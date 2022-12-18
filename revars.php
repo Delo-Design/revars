@@ -156,7 +156,7 @@ class plgSystemRevars extends CMSPlugin
 
 		foreach ($allVariables as $variable)
 		{
-			if (substr_count($variable->value, '{VAR') > 0)
+			if (substr_count($variable->value, '{') > 0)
 			{
 				$variable->value = $this->renderVariables($variable->value);
 			}
