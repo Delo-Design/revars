@@ -9,6 +9,7 @@
 	<license>GNU General Public License version 2 or later; see LICENSE.txt</license>
 	<version>1.2</version>
 	<description>PLG_REVARS_XML_DESCRIPTION</description>
+	<namespace path="src">Joomla\Plugin\System\Revars</namespace>
 
 	<languages folder="language">
 		<language tag="en-GB">en-GB/en-GB.plg_system_revars.ini</language>
@@ -18,7 +19,8 @@
 	</languages>
 
 	<files>
-		<filename plugin="revars">revars.php</filename>
+		<folder>services</folder>
+		<folder plugin="revars">src</folder>
 		<folder>language</folder>
 	</files>
 
