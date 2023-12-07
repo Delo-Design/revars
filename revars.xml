@@ -29,9 +29,23 @@
 	</updateservers>
 
 	<config>
-		<fields name="params">
+		<fields name="params" addfieldprefix="Joomla\Plugin\System\Revars\Field">
 			<fieldset name="basic">
 
+				<field
+						name="nesting"
+						type="number"
+						label="PLG_REVARS_CONFIG_NESTING"
+						default="1"
+						class="input-small w-25"
+				/>
+				<field
+						name="nesting2"
+						type="extra"
+						label=""
+				/>
+			</fieldset>
+			<fieldset name="forvariables" label="PLG_REVARS_VARIABLES_TAB">
 				<field
 						name="variables"
 						type="subform"
@@ -42,79 +56,117 @@
 						<field
 								name="comment"
 								type="textarea"
-								class="span12"
+								class="span12 w-100"
 								label="PLG_REVARS_CONFIG_VARIABLES_COMMENT"
+								description="PLG_REVARS_CONFIG_VARIABLES_COMMENT_DESCRIPTION"
 						/>
 						<field
 								name="variable"
 								type="text"
+								class="span12 w-100"
 								label="PLG_REVARS_CONFIG_VARIABLES_VARIABLE"
-
+								description="PLG_REVARS_CONFIG_VARIABLES_DESCRIPTION"
 						/>
 						<field
 								name="value"
-								type="text"
+								type="textarea"
 								filter="raw"
 								label="PLG_REVARS_CONFIG_VARIABLES_VALUE"
+								class="span12 w-100"
+								description="PLG_REVARS_CONFIG_VARIABLES_VALUE_DESCRIPTION"
 						/>
 					</form>
 				</field>
+			</fieldset>
 
-				<field type="spacer" name="spacer2" hr="true"/>
-
+			<fieldset name="forutmtags" label="PLG_REVARS_UTMS_TAB">
 				<field
-						name="utms"
+						name="utmtags"
 						type="subform"
 						label="PLG_REVARS_CONFIG_UTM"
+						layout="joomla.form.field.subform.repeatable-table"
+						multiple="true">
+					<form>
+
+						<field
+								name="opentag"
+								type="text"
+								class="span12 w-100"
+								filter="raw"
+								label="PLG_REVARS_OPENTAG"
+								description="PLG_REVARS_OPENTAG_DESC"
+						/>
+						<field
+								name="opentag2"
+								type="text"
+								class="span12 w-100"
+								filter="raw"
+								label="PLG_REVARS_OPENTAG2"
+								description="PLG_REVARS_CLOSETAG2_DESC"
+
+						/>
+						<field
+								name="variable"
+								type="text"
+								class="span12 w-100"
+								label="PLG_REVARS_UTMTAG"
+								description="PLG_REVARS_UTMTAG_DESC"
+						/>
+						<field
+								name="closetag2"
+								type="text"
+								class="span12 w-100"
+								filter="raw"
+								label="PLG_REVARS_OPENTAG2"
+								description="PLG_REVARS_CLOSETAG2_DESC"
+						/>
+						<field
+								name="closetag"
+								type="text"
+								filter="raw"
+								class="span12 w-100"
+								label="PLG_REVARS_CLOSETAG"
+								description="PLG_REVARS_OPENTAG_DESC"
+						/>
+					</form>
+				</field>
+				<field name="note22" type="note" class=" input-xxlarge" close="true"
+					   label="PLG_REVARS_OPENTAG2_NOTE"
+					   description="PLG_REVARS_OPENTAG2_NOTE_DESCR"
+				/>
+			</fieldset>
+			<fieldset name="forconstants" label="PLG_REVARS_CONSTANTS_TAB">
+				<field
+						name="constants"
+						type="subform"
+						label="PLG_REVARS_CONFIG_CONSTANTS"
 						layout="joomla.form.field.subform.repeatable-table"
 						multiple="true">
 					<form>
 						<field
 								name="comment"
 								type="textarea"
-								class="span12"
+								class="span12 w-100"
 								label="PLG_REVARS_CONFIG_VARIABLES_COMMENT"
+								description="PLG_REVARS_CONFIG_VARIABLES_COMMENT_DESCRIPTION"
 						/>
 						<field
 								name="variable"
 								type="text"
-								filter="raw"
-								label="PLG_REVARS_CONFIG_UTM_NAME"
+								class="span12 w-100"
+								label="PLG_REVARS_CONFIG_CONSTANT_ON_SITE"
+								description="PLG_REVARS_CONFIG_CONSTANT_ON_SITE_DESC"
 						/>
 						<field
 								name="value"
 								type="text"
 								filter="raw"
-								label="PLG_REVARS_CONFIG_UTM_INITIAL"
+								label="PLG_REVARS_CONFIG_CONSTANT_VALUE"
+								class="span12 w-100"
+								description="PLG_REVARS_CONFIG_CONSTANT_VALUE_DESC"
 						/>
 					</form>
 				</field>
-
-				<field type="spacer" name="spacer" hr="true"/>
-
-				<field
-						name="replaces"
-						type="subform"
-						label="PLG_REVARS_CONFIG_REPLACES"
-						layout="joomla.form.field.subform.repeatable-table"
-						multiple="true">
-					<form>
-						<field
-								name="search"
-								type="text"
-								filter="raw"
-								label="PLG_REVARS_CONFIG_REPLACES_SEARCH"
-						/>
-						<field
-								name="replace"
-								type="text"
-								filter="raw"
-								label="PLG_REVARS_CONFIG_REPLACES_REPLACE"
-						/>
-					</form>
-				</field>
-
-
 
 			</fieldset>
 		</fields>
