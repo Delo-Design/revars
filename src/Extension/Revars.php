@@ -89,7 +89,6 @@ class Revars extends CMSPlugin implements SubscriberInterface
 			return;
 		}
 
-		$vars              = $this->params->get('variables');
 		$utmtags           = $this->params->get('utmtags');
 		$languageConstants = $this->params->get('constants');
 
@@ -176,6 +175,7 @@ class Revars extends CMSPlugin implements SubscriberInterface
 			return true;
 		}
 
+		$vars         = $this->params->get('variables');
 		$allVariables = [
 			(object) [
 				'variable' => '{VAR_SERVER_NAME}',
