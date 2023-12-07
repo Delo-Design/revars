@@ -227,6 +227,8 @@ class Revars extends CMSPlugin implements SubscriberInterface
 			}
 		}
 
+		$allVariables = array_reverse($allVariables);
+
 		foreach ($allVariables as $variable)
 		{
 			$this->variables_prepare['keys'][]   = $variable->variable;
