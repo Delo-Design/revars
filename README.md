@@ -21,3 +21,7 @@
 Образец плагина, с помощью которого можно расширить функционал revars за счет добавления собственного кода – RevarsExtra
  
  https://github.com/Delo-Design/revarsextra
+
+## Модуль для админки, который редактирует поля revars
+
+https://github.com/Delo-Design/mod_admin_revars/tree/master
