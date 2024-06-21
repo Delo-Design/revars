@@ -13,6 +13,7 @@ defined('_JEXEC') or die;
 
 use Joomla\CMS\Application\CMSApplication;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Mail\MailTemplate;
 use Joomla\CMS\Plugin\CMSPlugin;
 use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\Language\Text;
@@ -51,8 +52,9 @@ class Revars extends CMSPlugin implements SubscriberInterface
 	public static function getSubscribedEvents(): array
 	{
 		return [
-			'onBeforeRender' => 'onBeforeRender',
-			'onAfterRender'  => 'onAfterRender',
+			'onBeforeRender'        => 'onBeforeRender',
+			'onAfterRender'         => 'onAfterRender',
+			'onMailBeforeRendering' => 'onMailBeforeRendering',
 		];
 	}
 
@@ -152,6 +154,20 @@ class Revars extends CMSPlugin implements SubscriberInterface
 		}
 
 		$this->app->setBody($body);
+	}
+
+	public function onMailBeforeRendering($template_id, MailTemplate &$template): void
+	{
+		$all_variables      = $this->getVariables();
+		$template_variables = [];
+
+		// пока без вложенных переменных
+		foreach ($all_variables as $variable)
+		{
+			$template_variables[str_replace(['{', '}'], '', $variable->variable)] = $variable->value;
+		}
+
+		$template->addTemplateData($template_variables);
 	}
 
 	public function getVariables()

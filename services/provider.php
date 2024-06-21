@@ -1,5 +1,14 @@
 <?php \defined('_JEXEC') or die;
 
+/**
+ * @package    Revars
+ *
+ * @author     Cymbal <cymbal@delo-design.ru> and Progreccor
+ * @copyright  Copyright © 2022 Delo Design. All rights reserved.
+ * @license    GNU General Public License version 2 or later; see LICENSE.txt
+ * @link       https://hika.su
+ */
+
 use Joomla\CMS\Extension\PluginInterface;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Plugin\PluginHelper;
