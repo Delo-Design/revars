@@ -17,6 +17,7 @@ use Joomla\CMS\Mail\MailTemplate;
 use Joomla\CMS\Plugin\CMSPlugin;
 use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\Language\Text;
+use Joomla\Event\Event;
 use Joomla\Event\SubscriberInterface;
 
 
@@ -156,8 +157,9 @@ class Revars extends CMSPlugin implements SubscriberInterface
 		$this->app->setBody($body);
 	}
 
-	public function onMailBeforeRendering($template_id, MailTemplate &$template): void
+	public function onMailBeforeRendering(Event $event): void
 	{
+		$template           = $event->getArgument(1);
 		$all_variables      = $this->getVariables();
 		$template_variables = [];
 
