@@ -17,6 +17,8 @@ defined('_JEXEC') or die;
 class ExtraField extends FormField
 {
 
+	protected $type = 'extra';
+
 	public function getInput()
 	{
 		Factory::getDocument()->addStyleDeclaration(
