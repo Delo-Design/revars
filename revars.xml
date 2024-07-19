@@ -1,15 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension type="plugin" version="3.8" group="system" method="upgrade">
 	<name>PLG_REVARS</name>
-	<creationDate>02.04.2022</creationDate>
+	<creationDate>16.06.2020</creationDate>
 	<author>Cymbal and Progreccor</author>
 	<authorEmail>cymbal@delo-design.ru</authorEmail>
 	<authorUrl>https://delo-design.ru</authorUrl>
-	<copyright>Copyright © 2022 Delo Design. All rights reserved.</copyright>
+	<copyright>Copyright © 2020 Delo Design. All rights reserved.</copyright>
 	<license>GNU General Public License version 2 or later; see LICENSE.txt</license>
-	<version>1.4.0</version>
+	<version>2.0.0</version>
 	<description>PLG_REVARS_XML_DESCRIPTION</description>
+	<namespace path="src">Joomla\Plugin\System\Revars</namespace>
+
 	<scriptfile>script.php</scriptfile>
+
 	<languages folder="language">
 		<language tag="en-GB">en-GB/en-GB.plg_system_revars.ini</language>
 		<language tag="en-GB">en-GB/en-GB.plg_system_revars.sys.ini</language>
@@ -18,8 +21,8 @@
 	</languages>
 
 	<files>
-		<filename plugin="revars">revars.php</filename>
-		<folder>fields</folder>
+		<folder>services</folder>
+		<folder plugin="revars">src</folder>
 		<folder>language</folder>
 	</files>
 
@@ -28,26 +31,21 @@
 	</updateservers>
 
 	<config>
-		<fields name="params" addfieldpath="/plugins/system/revars/fields">
+		<fields name="params" addfieldprefix="Joomla\Plugin\System\Revars\Field">
 			<fieldset name="basic">
 
 				<field
-					name="nesting"
-					type="number"
-					label="PLG_REVARS_CONFIG_NESTING"
-					default="1"
-					class="input-small w-25"
-				/>
-				<field
-						name="nesting2"
-						type="extra"
-						label=""
+						name="nesting"
+						type="number"
+						label="PLG_REVARS_CONFIG_NESTING"
+						default="1"
+						class="input-small w-25"
 				/>
 			</fieldset>
 			<fieldset name="forvariables" label="PLG_REVARS_VARIABLES_TAB">
 				<field
 						name="variables"
-						type="subform"
+						type="revarssubform"
 						label="PLG_REVARS_CONFIG_VARIABLES"
 						layout="joomla.form.field.subform.repeatable-table"
 						multiple="true">
@@ -81,7 +79,7 @@
 			<fieldset name="forutmtags" label="PLG_REVARS_UTMS_TAB">
 				<field
 						name="utmtags"
-						type="subform"
+						type="revarssubform"
 						label="PLG_REVARS_CONFIG_UTM"
 						layout="joomla.form.field.subform.repeatable-table"
 						multiple="true">
@@ -137,7 +135,7 @@
 			<fieldset name="forconstants" label="PLG_REVARS_CONSTANTS_TAB">
 				<field
 						name="constants"
-						type="subform"
+						type="revarssubform"
 						label="PLG_REVARS_CONFIG_CONSTANTS"
 						layout="joomla.form.field.subform.repeatable-table"
 						multiple="true">

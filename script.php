@@ -1,48 +1,207 @@
 <?php
-/**
- * @package    Revars
- *
- * @author     Cymbal <cymbal@delo-design.ru> and Progreccor
- * @copyright  Copyright © 2022 Delo Design. All rights reserved.
- * @license    GNU General Public License version 2 or later; see LICENSE.txt
- * @link       https://hika.su
- */
 
-// No direct access
 defined('_JEXEC') or die;
 
-class plgSystemRevarsInstallerScript
-{
-	function preflight($type, $parent)
+use Joomla\CMS\Application\AdministratorApplication;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Installer\InstallerAdapter;
+use Joomla\CMS\Installer\InstallerScriptInterface;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Version;
+use Joomla\Database\DatabaseDriver;
+use Joomla\DI\Container;
+use Joomla\DI\ServiceProviderInterface;
+
+return new class () implements ServiceProviderInterface {
+	public function register(Container $container)
 	{
-		if (!(version_compare(PHP_VERSION, '7.0.0') >= 0))
-		{
-			JFactory::getApplication()->enqueueMessage(JText::_('PLG_RADICALFORM_WRONG_PHP'), 'error');
+		$container->set(InstallerScriptInterface::class, new class ($container->get(AdministratorApplication::class)) implements InstallerScriptInterface {
+			/**
+			 * The application object
+			 *
+			 * @var  AdministratorApplication
+			 *
+			 * @since  __DEPLOY_VERSION__
+			 */
+			protected AdministratorApplication $app;
 
-			return false;
-		}
+			/**
+			 * The Database object.
+			 *
+			 * @var   DatabaseDriver
+			 *
+			 * @since  __DEPLOY_VERSION__
+			 */
+			protected DatabaseDriver $db;
 
-		jimport('joomla.version');
-		// and now we check Joomla version
-		$jversion = new JVersion();
+			/**
+			 * Minimum Joomla version required to install the extension.
+			 *
+			 * @var  string
+			 *
+			 * @since  __DEPLOY_VERSION__
+			 */
+			protected string $minimumJoomla = '4.0';
 
-		if (!$jversion->isCompatible('3.8'))
-		{
-			JFactory::getApplication()->enqueueMessage(JText::_('PLG_RADICALFORM_WRONG_JOOMLA'), 'error');
+			/**
+			 * Minimum PHP version required to install the extension.
+			 *
+			 * @var  string
+			 *
+			 * @since  __DEPLOY_VERSION__
+			 */
+			protected string $minimumPhp = '7.4';
 
-			return false;
-		}
+			/**
+			 * Constructor.
+			 *
+			 * @param   AdministratorApplication  $app  The application object.
+			 *
+			 * @since __DEPLOY_VERSION__
+			 */
+			public function __construct(AdministratorApplication $app)
+			{
+				$this->app = $app;
+				$this->db  = Factory::getContainer()->get('DatabaseDriver');
+			}
+
+			/**
+			 * Function called after the extension is installed.
+			 *
+			 * @param   InstallerAdapter  $adapter  The adapter calling this method
+			 *
+			 * @return  boolean  True on success
+			 *
+			 * @since   __DEPLOY_VERSION__
+			 */
+			public function install(InstallerAdapter $adapter): bool
+			{
+				$this->enablePlugin($adapter);
+
+				return true;
+			}
+
+			/**
+			 * Function called after the extension is updated.
+			 *
+			 * @param   InstallerAdapter  $adapter  The adapter calling this method
+			 *
+			 * @return  boolean  True on success
+			 *
+			 * @since   __DEPLOY_VERSION__
+			 */
+			public function update(InstallerAdapter $adapter): bool
+			{
+				// Refresh media version
+				(new Version())->refreshMediaVersion();
+
+				return true;
+			}
+
+			/**
+			 * Function called after the extension is uninstalled.
+			 *
+			 * @param   InstallerAdapter  $adapter  The adapter calling this method
+			 *
+			 * @return  boolean  True on success
+			 *
+			 * @since   __DEPLOY_VERSION__
+			 */
+			public function uninstall(InstallerAdapter $adapter): bool
+			{
+				return true;
+			}
+
+			/**
+			 * Function called before extension installation/update/removal procedure commences.
+			 *
+			 * @param   string            $type     The type of change (install or discover_install, update, uninstall)
+			 * @param   InstallerAdapter  $adapter  The adapter calling this method
+			 *
+			 * @return  boolean  True on success
+			 *
+			 * @since   __DEPLOY_VERSION__
+			 */
+			public function preflight(string $type, InstallerAdapter $adapter): bool
+			{
+				// Check compatible
+				if (!$this->checkCompatible())
+				{
+					return false;
+				}
+
+				return true;
+			}
+
+			/**
+			 * Function called after extension installation/update/removal procedure commences.
+			 *
+			 * @param   string            $type     The type of change (install or discover_install, update, uninstall)
+			 * @param   InstallerAdapter  $adapter  The adapter calling this method
+			 *
+			 * @return  boolean  True on success
+			 *
+			 * @since   __DEPLOY_VERSION__
+			 */
+			public function postflight(string $type, InstallerAdapter $adapter): bool
+			{
+				return true;
+			}
+
+			/**
+			 * Method to check compatible.
+			 *
+			 * @return  bool True on success, False on failure.
+			 *
+			 * @throws  \Exception
+			 *
+			 * @since  __DEPLOY_VERSION__
+			 */
+			protected function checkCompatible(): bool
+			{
+				$app = Factory::getApplication();
+
+				// Check joomla version
+				if (!(new Version())->isCompatible($this->minimumJoomla))
+				{
+					$app->enqueueMessage(Text::sprintf('PLG_RADICAL_MULTI_FIELD_WRONG_JOOMLA', $this->minimumJoomla),
+						'error');
+
+					return false;
+				}
+
+				// Check PHP
+				if (!(version_compare(PHP_VERSION, $this->minimumPhp) >= 0))
+				{
+					$app->enqueueMessage(Text::sprintf('PLG_RADICAL_MULTI_FIELD_WRONG_PHP', $this->minimumPhp),
+						'error');
+
+					return false;
+				}
+
+				return true;
+			}
+
+			/**
+			 * Enable plugin after installation.
+			 *
+			 * @param   InstallerAdapter  $adapter  Parent object calling object.
+			 *
+			 * @since  1.0.0
+			 */
+			protected function enablePlugin(InstallerAdapter $adapter)
+			{
+				// Prepare plugin object
+				$plugin          = new \stdClass();
+				$plugin->type    = 'plugin';
+				$plugin->element = $adapter->getElement();
+				$plugin->folder  = (string) $adapter->getParent()->manifest->attributes()['group'];
+				$plugin->enabled = 1;
+
+				// Update record
+				$this->db->updateObject('#__extensions', $plugin, ['type', 'element', 'folder']);
+			}
+
+		});
 	}
-
-
-	function postflight($type, $parent)
-	{
-
-		$db    = JFactory::getDbo();
-		$query = $db->getQuery(true);
-		$query->update('#__extensions')->set('enabled=1')->set('ordering=1000')->where('type=' . $db->q('plugin'))->where('element=' . $db->q('revars'));
-		$db->setQuery($query)->execute();
-
-		JFactory::getApplication()->enqueueMessage(JText::_('PLG_REVARS_WELCOME_MESSAGE'), 'notice');
-	}
-}
+};
