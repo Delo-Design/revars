@@ -11,8 +11,6 @@
 	<description>PLG_REVARS_XML_DESCRIPTION</description>
 	<namespace path="src">Joomla\Plugin\System\Revars</namespace>
 
-	<scriptfile>script.php</scriptfile>
-
 	<languages folder="language">
 		<language tag="en-GB">en-GB/en-GB.plg_system_revars.ini</language>
 		<language tag="en-GB">en-GB/en-GB.plg_system_revars.sys.ini</language>
