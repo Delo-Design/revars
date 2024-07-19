@@ -13,13 +13,11 @@ defined('_JEXEC') or die;
 
 use Joomla\CMS\Application\CMSApplication;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Mail\MailTemplate;
 use Joomla\CMS\Plugin\CMSPlugin;
 use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\Event\Event;
 use Joomla\Event\SubscriberInterface;
-
 
 /**
  * Revars plugin.
@@ -257,4 +255,5 @@ class Revars extends CMSPlugin implements SubscriberInterface
 
 		return true;
 	}
+
 }

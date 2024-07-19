@@ -39,16 +39,11 @@
 						default="1"
 						class="input-small w-25"
 				/>
-				<field
-						name="nesting2"
-						type="extra"
-						label=""
-				/>
 			</fieldset>
 			<fieldset name="forvariables" label="PLG_REVARS_VARIABLES_TAB">
 				<field
 						name="variables"
-						type="subform"
+						type="revarssubform"
 						label="PLG_REVARS_CONFIG_VARIABLES"
 						layout="joomla.form.field.subform.repeatable-table"
 						multiple="true">
@@ -82,7 +77,7 @@
 			<fieldset name="forutmtags" label="PLG_REVARS_UTMS_TAB">
 				<field
 						name="utmtags"
-						type="subform"
+						type="revarssubform"
 						label="PLG_REVARS_CONFIG_UTM"
 						layout="joomla.form.field.subform.repeatable-table"
 						multiple="true">
@@ -138,7 +133,7 @@
 			<fieldset name="forconstants" label="PLG_REVARS_CONSTANTS_TAB">
 				<field
 						name="constants"
-						type="subform"
+						type="revarssubform"
 						label="PLG_REVARS_CONFIG_CONSTANTS"
 						layout="joomla.form.field.subform.repeatable-table"
 						multiple="true">
