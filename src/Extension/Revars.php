@@ -18,6 +18,11 @@ use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\Event\Event;
 use Joomla\Event\SubscriberInterface;
+use Joomla\Filesystem\Path;
+use Joomla\Plugin\System\Revars\Formula\JoomlaFuntions;
+use RPN\Formula;
+use RPN\StandardMathFunctions;
+use RPN\StringFunctions;
 
 /**
  * Revars plugin.
@@ -90,6 +95,8 @@ class Revars extends CMSPlugin implements SubscriberInterface
 			return;
 		}
 
+		include_once Path::clean(JPATH_ROOT . '/plugins/system/revars/vendor/autoload.php');
+
 		$utmtags           = $this->params->get('utmtags');
 		$languageConstants = $this->params->get('constants');
 
@@ -150,6 +157,32 @@ class Revars extends CMSPlugin implements SubscriberInterface
 			{
 				$body = str_replace($variable->variable, Text::_(strtoupper(trim($variable->value))), $body);
 			}
+		}
+
+		if (str_contains($body, '{F'))
+		{
+			$formula = new Formula();
+
+			$formula->getFunctions()
+				->register(StandardMathFunctions::class)
+				->register(StringFunctions::class)
+				->register(JoomlaFuntions::class);
+
+			$body = preg_replace_callback("#\{F(.*?)\}#",
+				static function ($matches) use ($formula) {
+
+					$row = trim($matches[1]);
+
+					try
+					{
+						return $formula->solve($row);
+					}
+					catch (\Exception $e)
+					{
+						return $e->getMessage();
+					}
+
+				}, $body);
 		}
 
 		$this->app->setBody($body);

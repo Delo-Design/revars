@@ -24,6 +24,7 @@
 		<folder>services</folder>
 		<folder plugin="revars">src</folder>
 		<folder>language</folder>
+		<folder>vendor</folder>
 	</files>
 
 	<updateservers>

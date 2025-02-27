@@ -1,1 +1,26 @@
-﻿.idea
+### Composer template
+composer.phar
+composer.lock
+/vendor/
+
+# Commit your application's lock file https://getcomposer.org/doc/01-basic-usage.md#commit-your-composer-lock-file-to-version-control
+# You may choose to ignore a library lock file http://getcomposer.org/doc/02-libraries.md#lock-file
+# composer.lock
+
+### PhpStorm template
+.idea/
+
+# File-based project format
+*.iws
+
+# IntelliJ
+out/
+
+# mpeltonen/sbt-idea plugin
+.idea_modules/
+
+# PHPUnit
+.phpunit.result.cache
+.phpunit.cache
+
+**/~$*

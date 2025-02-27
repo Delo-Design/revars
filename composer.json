@@ -1,0 +1,38 @@
+{
+	"name": "revars/main",
+	"type": "metapackage",
+	"authors": [
+		{
+			"name": "Dmitrii Cymbal",
+			"email": "cymbal@delo-design.ru",
+			"homepage": "https://delo-design.ru",
+			"role": "Developer"
+		}
+	],
+	"support": {
+		"issues": "https://github.com/Delo-Design/revars/issues",
+		"source": "https://github.com/Delo-Design/revars"
+	},
+	"minimum-stability": "dev",
+	"prefer-stable": true,
+	"config": {
+		"optimize-autoloader": true,
+		"use-include-path": false,
+		"prepend-autoloader": true,
+		"prefer-dist": false,
+		"platform": {
+			"php": "8.2"
+		}
+	},
+	"require": {
+		"php": ">=8.2",
+		"radicalmart/lib_rpn": "dev-refactoring"
+	},
+	"repositories": [
+		{
+			"type": "vcs",
+			"url": "git@github.com:RadicalMart/lib_rpn.git",
+			"no-api": true
+		}
+	]
+}
