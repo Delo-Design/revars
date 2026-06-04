@@ -104,7 +104,12 @@ class Revars extends CMSPlugin implements SubscriberInterface
 				{
 					if ($name == $variable->variable)
 					{
-						$variable->value = strip_tags($item);
+						if (!is_scalar($item))
+						{
+							continue;
+						}
+
+						$variable->value = htmlspecialchars(strip_tags((string) $item), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
 						$weHaveUTMS      = true;
 					}
 				}
@@ -129,12 +134,17 @@ class Revars extends CMSPlugin implements SubscriberInterface
 		{
 			foreach ($utmtags as $variable)
 			{
+				if (!isset($variable->value) || empty($variable->opentag) || empty($variable->closetag))
+				{
+					continue;
+				}
+
 				// добавляем им префикс VAR, оборачиваем в скобки и приводим к верхнему регистру
 				$splitedBody = explode($variable->opentag, $body, 2);
 				// если тег нашли - будем менять
 				if (count($splitedBody) > 1)
 				{
-					$latestChunk = explode($variable->closetag, $body, 2);
+					$latestChunk = explode($variable->closetag, $splitedBody[1], 2);
 					// проверяем есть ли оконечный тег
 					if (count($latestChunk) > 1)
 					{
