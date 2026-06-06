@@ -24,7 +24,22 @@ class RevarssubformField extends SubformField
 		Factory::getApplication()->getDocument()->addStyleDeclaration(<<<EOF
 				.subform-table-sublayout-section .controls { margin-left: 0px; padding-right: 0; }
 				.subform-table-sublayout-section .controls input { box-sizing: border-box;  }
-				.subform-table-sublayout-section table th { width: 30% !important;  } .subform-table-sublayout-section { max-width: 1440px;} #attrib-forutmtags .subform-table-sublayout-section table th { width: 18% !important; }
+				.subform-table-sublayout-section .controls textarea { box-sizing: border-box;  }
+				.subform-table-sublayout-section table th { width: 30% !important;  } .subform-table-sublayout-section { max-width: 1440px;}
+				.options-form .form-grid > .control-group:has(.subform-table-sublayout-section) > .control-label { display: none; }
+				.options-form .form-grid > .control-group:has(.subform-table-sublayout-section) > .controls { margin-left: 0; width: 100%; max-width: 100%; }
+				#attrib-forutmtags .subform-table-sublayout-section { overflow-x: auto; max-width: 100%; }
+				#attrib-forutmtags .subform-table-sublayout-section table { min-width: 1320px; }
+				#attrib-forutmtags .subform-table-sublayout-section table th { width: 15% !important; }
+EOF
+		);
+
+		Factory::getApplication()->getDocument()->addScriptDeclaration(<<<EOF
+document.addEventListener('DOMContentLoaded', function () {
+	document.querySelectorAll('.subform-table-sublayout-section table').forEach(function (table) {
+		table.classList.add('table-striped', 'table-bordered');
+	});
+});
 EOF
 		);
 

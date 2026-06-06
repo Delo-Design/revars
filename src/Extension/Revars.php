@@ -116,6 +116,11 @@ class Revars extends CMSPlugin implements SubscriberInterface
 							continue;
 						}
 
+						if (!$this->isAllowedUtmValue($value, $variable->allowed_values ?? ''))
+						{
+							continue;
+						}
+
 						$variable->value = $value;
 						$weHaveUTMS      = true;
 					}
@@ -349,6 +354,28 @@ class Revars extends CMSPlugin implements SubscriberInterface
 		$value = function_exists('mb_substr') ? mb_substr($value, 0, 512, 'UTF-8') : substr($value, 0, 512);
 
 		return htmlspecialchars($value, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+	}
+
+	protected function isAllowedUtmValue(string $value, $allowedValues): bool
+	{
+		$allowedValues = $this->stringifyValue($allowedValues);
+
+		if (trim($allowedValues) === '')
+		{
+			return true;
+		}
+
+		$values = preg_split('/\R/u', $allowedValues);
+
+		foreach ($values as $allowedValue)
+		{
+			if ($value === $this->sanitizeUtmValue($allowedValue))
+			{
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 }

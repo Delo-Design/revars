@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension type="plugin" version="3.8" group="system" method="upgrade">
 	<name>PLG_REVARS</name>
-	<creationDate>19.07.2024</creationDate>
+	<creationDate>06.06.2026</creationDate>
 	<author>Cymbal and Progreccor</author>
 	<authorEmail>vladimir@radicalmart.ru</authorEmail>
 	<authorUrl>https://radicalmart.ru</authorUrl>
@@ -81,6 +81,7 @@
 						type="revarssubform"
 						label="PLG_REVARS_CONFIG_UTM"
 						layout="joomla.form.field.subform.repeatable-table"
+						class="revars-utmtags"
 						multiple="true">
 					<form>
 
@@ -107,6 +108,14 @@
 								class="span12 w-100"
 								label="PLG_REVARS_UTMTAG"
 								description="PLG_REVARS_UTMTAG_DESC"
+						/>
+						<field
+								name="allowed_values"
+								type="textarea"
+								class="span12 w-100"
+								rows="3"
+								label="PLG_REVARS_UTM_ALLOWED_VALUES"
+								description="PLG_REVARS_UTM_ALLOWED_VALUES_DESC"
 						/>
 						<field
 								name="closetag2"
