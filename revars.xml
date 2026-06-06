@@ -39,7 +39,7 @@
 						type="number"
 						label="PLG_REVARS_CONFIG_NESTING"
 						default="1"
-						class="input-small w-25"
+						class="input-mini w-auto"
 				/>
 			</fieldset>
 			<fieldset name="forvariables" label="PLG_REVARS_VARIABLES_TAB">

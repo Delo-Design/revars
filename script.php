@@ -145,6 +145,11 @@ return new class () implements ServiceProviderInterface {
 			 */
 			public function postflight(string $type, InstallerAdapter $adapter): bool
 			{
+				if ($type !== 'uninstall')
+				{
+					$this->showWelcomeMessage($adapter);
+				}
+
 				return true;
 			}
 
@@ -200,6 +205,48 @@ return new class () implements ServiceProviderInterface {
 
 				// Update record
 				$this->db->updateObject('#__extensions', $plugin, ['type', 'element', 'folder']);
+			}
+
+			/**
+			 * Show message with link to plugin settings after installation.
+			 *
+			 * @param   InstallerAdapter  $adapter  Parent object calling object.
+			 *
+			 * @since  __DEPLOY_VERSION__
+			 */
+			protected function showWelcomeMessage(InstallerAdapter $adapter): void
+			{
+				$extensionId = $this->getPluginExtensionId($adapter);
+
+				if (!$extensionId)
+				{
+					return;
+				}
+
+				$url = 'index.php?option=com_plugins&task=plugin.edit&extension_id=' . $extensionId;
+
+				$this->app->enqueueMessage(Text::sprintf('PLG_REVARS_WELCOME_MESSAGE', $url), 'notice');
+			}
+
+			/**
+			 * Get installed plugin extension ID.
+			 *
+			 * @param   InstallerAdapter  $adapter  Parent object calling object.
+			 *
+			 * @return  int
+			 *
+			 * @since  __DEPLOY_VERSION__
+			 */
+			protected function getPluginExtensionId(InstallerAdapter $adapter): int
+			{
+				$query = $this->db->getQuery(true)
+					->select($this->db->quoteName('extension_id'))
+					->from($this->db->quoteName('#__extensions'))
+					->where($this->db->quoteName('type') . ' = ' . $this->db->quote('plugin'))
+					->where($this->db->quoteName('element') . ' = ' . $this->db->quote($adapter->getElement()))
+					->where($this->db->quoteName('folder') . ' = ' . $this->db->quote((string) $adapter->getParent()->manifest->attributes()['group']));
+
+				return (int) $this->db->setQuery($query)->loadResult();
 			}
 
 		});
