@@ -109,7 +109,14 @@ class Revars extends CMSPlugin implements SubscriberInterface
 							continue;
 						}
 
-						$variable->value = htmlspecialchars(strip_tags((string) $item), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+						$value = $this->sanitizeUtmValue($item);
+
+						if ($value === '')
+						{
+							continue;
+						}
+
+						$variable->value = $value;
 						$weHaveUTMS      = true;
 					}
 				}
@@ -122,7 +129,7 @@ class Revars extends CMSPlugin implements SubscriberInterface
 		$nesting = (int) $this->params->get('nesting', 1);
 
 		// запускаем в цикле, потому что мы можем построить переменные вида {VAR_{VAR_SUBDOMAIN}_PHONE_FULL},
-		// то есть переменные вложенные друг в друга
+		// то есть переменные, вложенные друг в друга
 
 		for ($i = 1; $i <= $nesting; $i++)
 		{
@@ -158,6 +165,8 @@ class Revars extends CMSPlugin implements SubscriberInterface
 							. $this->stringifyValue($variable->closetag2 ?? '')
 							. $closeTag
 							. $latestChunk[1];
+
+						$this->app->allowCache(false);
 					}
 				}
 			}
@@ -318,6 +327,28 @@ class Revars extends CMSPlugin implements SubscriberInterface
 		}
 
 		return '';
+	}
+
+	protected function sanitizeUtmValue($value): string
+	{
+		if (!is_scalar($value))
+		{
+			return '';
+		}
+
+		$value = strip_tags((string) $value);
+		$value = preg_replace('/[\x00-\x1F\x7F]+/u', ' ', $value);
+		$value = preg_replace('/\s+/u', ' ', $value);
+		$value = trim($value ?? '');
+
+		if ($value === '')
+		{
+			return '';
+		}
+
+		$value = function_exists('mb_substr') ? mb_substr($value, 0, 512, 'UTF-8') : substr($value, 0, 512);
+
+		return htmlspecialchars($value, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
 	}
 
 }

@@ -77,6 +77,7 @@ return new class () implements ServiceProviderInterface {
 			public function install(InstallerAdapter $adapter): bool
 			{
 				$this->enablePlugin($adapter);
+				$this->removeLegacyLanguageFiles($adapter);
 
 				return true;
 			}
@@ -94,6 +95,7 @@ return new class () implements ServiceProviderInterface {
 			{
 				// Refresh media version
 				(new Version())->refreshMediaVersion();
+				$this->removeLegacyLanguageFiles($adapter);
 
 				return true;
 			}
@@ -226,6 +228,55 @@ return new class () implements ServiceProviderInterface {
 				$url = 'index.php?option=com_plugins&task=plugin.edit&extension_id=' . $extensionId;
 
 				$this->app->enqueueMessage(Text::sprintf('PLG_REVARS_WELCOME_MESSAGE', $url), 'notice');
+			}
+
+			/**
+			 * Remove language files using the legacy language-prefixed naming convention.
+			 *
+			 * @param   InstallerAdapter  $adapter  Parent object calling object.
+			 *
+			 * @since  __DEPLOY_VERSION__
+			 */
+			protected function removeLegacyLanguageFiles(InstallerAdapter $adapter): void
+			{
+				$group   = (string) $adapter->getParent()->manifest->attributes()['group'];
+				$element = $adapter->getElement();
+
+				foreach (['en-GB', 'ru-RU'] as $language)
+				{
+					foreach (['plg_system_revars.ini', 'plg_system_revars.sys.ini'] as $file)
+					{
+						$legacyFile = $language . '.' . $file;
+						$paths      = [
+							JPATH_ADMINISTRATOR . '/language/' . $language . '/' . $legacyFile,
+							JPATH_ROOT . '/language/' . $language . '/' . $legacyFile,
+							JPATH_PLUGINS . '/' . $group . '/' . $element . '/language/' . $language . '/' . $legacyFile,
+							JPATH_PLUGINS . '/' . $group . '/' . $element . '/language/' . $language . '/' . $file,
+						];
+
+						foreach ($paths as $path)
+						{
+							if (is_file($path))
+							{
+								@unlink($path);
+							}
+						}
+					}
+
+					$languagePath = JPATH_PLUGINS . '/' . $group . '/' . $element . '/language/' . $language;
+
+					if (is_dir($languagePath))
+					{
+						@rmdir($languagePath);
+					}
+				}
+
+				$languagePath = JPATH_PLUGINS . '/' . $group . '/' . $element . '/language';
+
+				if (is_dir($languagePath))
+				{
+					@rmdir($languagePath);
+				}
 			}
 
 			/**
