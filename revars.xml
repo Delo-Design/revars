@@ -7,7 +7,7 @@
 	<authorUrl>https://radicalmart.ru</authorUrl>
 	<copyright>Copyright © 2026 Delo Design. All rights reserved.</copyright>
 	<license>GNU General Public License version 2 or later; see LICENSE.txt</license>
-	<version>2.0.1</version>
+	<version>2.0.2</version>
 	<description>PLG_REVARS_XML_DESCRIPTION</description>
 	<namespace path="src">Joomla\Plugin\System\Revars</namespace>
 

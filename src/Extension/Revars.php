@@ -12,7 +12,6 @@ defined('_JEXEC') or die;
  */
 
 use Joomla\CMS\Application\CMSApplication;
-use Joomla\CMS\Factory;
 use Joomla\CMS\Plugin\CMSPlugin;
 use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\Language\Text;
@@ -69,14 +68,15 @@ class Revars extends CMSPlugin implements SubscriberInterface
 
 		$this->prepareVariables();
 		$nesting = (int) $this->params->get('nesting', 1);
-		$title   = Factory::getDocument()->getTitle();
+		$document = $this->getApplication()->getDocument();
+		$title    = $document->getTitle();
 
 		for ($i = 1; $i <= $nesting; $i++)
 		{
 			$title = str_replace($this->variables_prepare['keys'], $this->variables_prepare['values'], $title);
 		}
 
-		Factory::getDocument()->setTitle($title);
+		$document->setTitle($title);
 	}
 
 	public function onAfterRender()
@@ -102,7 +102,7 @@ class Revars extends CMSPlugin implements SubscriberInterface
 			{
 				foreach ($utmtags as $variable)
 				{
-					if ($name == $variable->variable)
+					if ($name == $this->stringifyValue($variable->variable ?? ''))
 					{
 						if (!is_scalar($item))
 						{
@@ -134,21 +134,30 @@ class Revars extends CMSPlugin implements SubscriberInterface
 		{
 			foreach ($utmtags as $variable)
 			{
-				if (!isset($variable->value) || empty($variable->opentag) || empty($variable->closetag))
+				$openTag  = $this->stringifyValue($variable->opentag ?? '');
+				$closeTag = $this->stringifyValue($variable->closetag ?? '');
+
+				if (!isset($variable->value) || $openTag === '' || $closeTag === '')
 				{
 					continue;
 				}
 
 				// добавляем им префикс VAR, оборачиваем в скобки и приводим к верхнему регистру
-				$splitedBody = explode($variable->opentag, $body, 2);
+				$splitedBody = explode($openTag, $body, 2);
 				// если тег нашли - будем менять
 				if (count($splitedBody) > 1)
 				{
-					$latestChunk = explode($variable->closetag, $splitedBody[1], 2);
+					$latestChunk = explode($closeTag, $splitedBody[1], 2);
 					// проверяем есть ли оконечный тег
 					if (count($latestChunk) > 1)
 					{
-						$body = $splitedBody[0] . $variable->opentag . $variable->opentag2 . $variable->value . $variable->closetag2 . $variable->closetag . $latestChunk[1];
+						$body = $splitedBody[0]
+							. $openTag
+							. $this->stringifyValue($variable->opentag2 ?? '')
+							. $this->stringifyValue($variable->value)
+							. $this->stringifyValue($variable->closetag2 ?? '')
+							. $closeTag
+							. $latestChunk[1];
 					}
 				}
 			}
@@ -158,7 +167,18 @@ class Revars extends CMSPlugin implements SubscriberInterface
 		{
 			foreach ($languageConstants as $variable)
 			{
-				$body = str_replace($variable->variable, Text::_(strtoupper(trim($variable->value))), $body);
+				$key = $this->stringifyValue($variable->variable ?? '');
+
+				if ($key === '')
+				{
+					continue;
+				}
+
+				$body = str_replace(
+					$key,
+					Text::_(strtoupper(trim($this->stringifyValue($variable->value ?? '')))),
+					$body
+				);
 			}
 		}
 
@@ -167,14 +187,26 @@ class Revars extends CMSPlugin implements SubscriberInterface
 
 	public function onMailBeforeRendering(Event $event): void
 	{
-		$template           = $event->getArgument(1);
+		$template           = method_exists($event, 'getTemplate') ? $event->getTemplate() : $event->getArgument(1);
 		$all_variables      = $this->getVariables();
 		$template_variables = [];
+
+		if (!is_object($template) || !method_exists($template, 'addTemplateData'))
+		{
+			return;
+		}
 
 		// пока без вложенных переменных
 		foreach ($all_variables as $variable)
 		{
-			$template_variables[str_replace(['{', '}'], '', $variable->variable)] = $variable->value;
+			$key = $this->stringifyValue($variable->variable ?? '');
+
+			if ($key === '')
+			{
+				continue;
+			}
+
+			$template_variables[str_replace(['{', '}'], '', $key)] = $this->stringifyValue($variable->value ?? '');
 		}
 
 		$template->addTemplateData($template_variables);
@@ -205,19 +237,19 @@ class Revars extends CMSPlugin implements SubscriberInterface
 		$allVariables = [
 			(object) [
 				'variable' => '{VAR_SERVER_NAME}',
-				'value'    => $_SERVER['SERVER_NAME'],
+				'value'    => $_SERVER['SERVER_NAME'] ?? '',
 			],
 			(object) [
 				'variable' => '{VAR_HTTP_HOST}',
-				'value'    => $_SERVER['HTTP_HOST'],
+				'value'    => $_SERVER['HTTP_HOST'] ?? '',
 			],
 			(object) [
 				'variable' => '{VAR_REQUEST_URI}',
-				'value'    => $_SERVER['REQUEST_URI'],
+				'value'    => $_SERVER['REQUEST_URI'] ?? '',
 			],
 			(object) [
 				'variable' => '{VAR_REMOTE_ADDR}',
-				'value'    => $_SERVER['REMOTE_ADDR'],
+				'value'    => $_SERVER['REMOTE_ADDR'] ?? '',
 			]
 		];
 
@@ -257,13 +289,35 @@ class Revars extends CMSPlugin implements SubscriberInterface
 
 		foreach ($allVariables as $variable)
 		{
-			$this->variables_prepare['keys'][]   = $variable->variable;
-			$this->variables_prepare['values'][] = $variable->value;
+			$key = $this->stringifyValue($variable->variable ?? '');
+
+			if ($key === '')
+			{
+				continue;
+			}
+
+			$this->variables_prepare['keys'][]   = $key;
+			$this->variables_prepare['values'][] = $this->stringifyValue($variable->value ?? '');
 		}
 
 		$this->variables_all = array_reverse($allVariables);
 
 		return true;
+	}
+
+	protected function stringifyValue($value): string
+	{
+		if ($value === null)
+		{
+			return '';
+		}
+
+		if (is_scalar($value) || $value instanceof \Stringable)
+		{
+			return (string) $value;
+		}
+
+		return '';
 	}
 
 }

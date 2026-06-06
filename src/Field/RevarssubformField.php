@@ -21,7 +21,7 @@ class RevarssubformField extends SubformField
 
 	public function getInput()
 	{
-		Factory::getDocument()->addStyleDeclaration(<<<EOF
+		Factory::getApplication()->getDocument()->addStyleDeclaration(<<<EOF
 				.subform-table-sublayout-section .controls { margin-left: 0px; padding-right: 0; }
 				.subform-table-sublayout-section .controls input { box-sizing: border-box;  }
 				.subform-table-sublayout-section table th { width: 30% !important;  } .subform-table-sublayout-section { max-width: 1440px;} #attrib-forutmtags .subform-table-sublayout-section table th { width: 18% !important; }

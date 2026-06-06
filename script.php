@@ -8,7 +8,7 @@ use Joomla\CMS\Installer\InstallerAdapter;
 use Joomla\CMS\Installer\InstallerScriptInterface;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Version;
-use Joomla\Database\DatabaseDriver;
+use Joomla\Database\DatabaseInterface;
 use Joomla\DI\Container;
 use Joomla\DI\ServiceProviderInterface;
 
@@ -28,11 +28,11 @@ return new class () implements ServiceProviderInterface {
 			/**
 			 * The Database object.
 			 *
-			 * @var   DatabaseDriver
+			 * @var   DatabaseInterface
 			 *
 			 * @since  __DEPLOY_VERSION__
 			 */
-			protected DatabaseDriver $db;
+			protected DatabaseInterface $db;
 
 			/**
 			 * Minimum Joomla version required to install the extension.
@@ -41,7 +41,7 @@ return new class () implements ServiceProviderInterface {
 			 *
 			 * @since  __DEPLOY_VERSION__
 			 */
-			protected string $minimumJoomla = '4.0';
+			protected string $minimumJoomla = '5.0';
 
 			/**
 			 * Minimum PHP version required to install the extension.
@@ -50,7 +50,7 @@ return new class () implements ServiceProviderInterface {
 			 *
 			 * @since  __DEPLOY_VERSION__
 			 */
-			protected string $minimumPhp = '7.4';
+			protected string $minimumPhp = '8.2';
 
 			/**
 			 * Constructor.
@@ -62,7 +62,7 @@ return new class () implements ServiceProviderInterface {
 			public function __construct(AdministratorApplication $app)
 			{
 				$this->app = $app;
-				$this->db  = Factory::getContainer()->get('DatabaseDriver');
+				$this->db  = Factory::getContainer()->get(DatabaseInterface::class);
 			}
 
 			/**
@@ -164,7 +164,7 @@ return new class () implements ServiceProviderInterface {
 				// Check joomla version
 				if (!(new Version())->isCompatible($this->minimumJoomla))
 				{
-					$app->enqueueMessage(Text::sprintf('PLG_RADICAL_MULTI_FIELD_WRONG_JOOMLA', $this->minimumJoomla),
+					$app->enqueueMessage(Text::sprintf('PLG_REVARS_WRONG_JOOMLA', $this->minimumJoomla),
 						'error');
 
 					return false;
@@ -173,7 +173,7 @@ return new class () implements ServiceProviderInterface {
 				// Check PHP
 				if (!(version_compare(PHP_VERSION, $this->minimumPhp) >= 0))
 				{
-					$app->enqueueMessage(Text::sprintf('PLG_RADICAL_MULTI_FIELD_WRONG_PHP', $this->minimumPhp),
+					$app->enqueueMessage(Text::sprintf('PLG_REVARS_WRONG_PHP', $this->minimumPhp),
 						'error');
 
 					return false;
